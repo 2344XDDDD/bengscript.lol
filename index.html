@@ -93,12 +93,29 @@
             animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             animation-delay: 0.3s;
         }
+        .copy-btn-wrapper {
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation-delay: 0.35s;
+        }
+        .copy-btn {
+            background-color: #ffffff; color: #000000; border: none;
+            padding: 14px 32px; border-radius: 50px; font-size: 1rem; font-weight: 600;
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 60px;
+        }
         .copy-btn:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
         .copy-btn:active { transform: scale(0.98); }
         .copy-btn svg { width: 18px; height: 18px; }
+        .image-anim-wrapper {
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation-delay: 0.4s;
+            perspective: 1000px; 
+            width: 800px; max-width: 90%;
+        }
         .image-showcase {
-            width: 800px;
-            max-width: 90%;
+            width: 100%;
             border-radius: 12px;
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
@@ -107,20 +124,15 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
             background-color: #0e0e11;
-            opacity: 0;
-            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            animation-delay: 0.4s;
         }
         .image-showcase img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 12px;
+            width: 100%; height: auto; display: block; border-radius: 12px;
             filter: contrast(1.05) brightness(1.02);
+            pointer-events: none; 
         }
         .image-shine {
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.1), transparent 50%);
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.15), transparent 50%);
             z-index: 10; pointer-events: none; opacity: 0; transition: opacity 0.3s;
             border-radius: 12px; mix-blend-mode: overlay;
         }
@@ -149,14 +161,8 @@
             .navbar { padding: 0 20px; }
         }
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(60px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -181,9 +187,17 @@
         </div>
         <h1 class="hero-title">BENG - SCRIPT V2</h1>
         <p class="hero-desc"> New Web | SOON</p>
-        <div class="image-showcase">
-            <img src="https://bengscript.lol/BENG%20-%20SCRIPTdownload/屏幕截图 2025-12-09 214033.png" alt="Script Interface">
-            <div class="image-shine"></div>
+        <div class="copy-btn-wrapper">
+            <button class="copy-btn" id="copyBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span id="btnText">Copy Script</span>
+            </button>
+        </div>
+        <div class="image-anim-wrapper">
+            <div class="image-showcase">
+                <img src="https://bengscript.lol/BENG%20-%20SCRIPTdownload/屏幕截图 2025-12-09 214033.png" alt="SCRIPT_ICON">
+                <div class="image-shine"></div>
+            </div>
         </div>
     </div>
     <div class="modal-overlay" id="modalOverlay">
@@ -201,6 +215,7 @@
             </div>
         </div>
     </div>
+
     <script>
         const openBtn = document.getElementById('openModalBtn');
         const closeBtn = document.getElementById('closeModalBtn');
@@ -209,6 +224,20 @@
         closeBtn.addEventListener('click', () => { overlay.classList.remove('active'); });
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) { overlay.classList.remove('active'); }
+        });
+        const copyBtn = document.getElementById('copyBtn');
+        const btnText = document.getElementById('btnText');
+        const scriptCode = 'loadstring(game:HttpGet("https://beng-script.lol/scripts/Loader.lua"))()'; 
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(scriptCode).then(() => {
+                const originalText = btnText.innerText;
+                btnText.innerText = "Copied!";
+                copyBtn.style.backgroundColor = "#4ade80"; 
+                setTimeout(() => {
+                    btnText.innerText = originalText;
+                    copyBtn.style.backgroundColor = "#ffffff";
+                }, 2000);
+            });
         });
         const card = document.querySelector('.image-showcase');
         card.addEventListener('mousemove', (e) => {
@@ -221,10 +250,11 @@
             const rotateY = ((x - centerX) / centerX) * 5;
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
+
         card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            card.style.transform = 'rotateX(0) rotateY(0)';
         });
     </script>
 </body>
