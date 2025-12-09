@@ -176,7 +176,7 @@
                 <li><a href="#">FAQ</a></li>
             </ul>
             <div class="divider"></div>
-            <a href="#" class="discord-btn">Discord <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+            <a href="https://discord.gg/85D9XHgVKg" class="discord-btn">Discord</a>
         </div>
     </nav>
     <div class="hero-container">
@@ -188,10 +188,6 @@
         <h1 class="hero-title">BENG - SCRIPT V2</h1>
         <p class="hero-desc"> New Web | SOON</p>
         <div class="copy-btn-wrapper">
-            <button class="copy-btn" id="copyBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                <span id="btnText">Copy Script</span>
-            </button>
         </div>
         <div class="image-anim-wrapper">
             <div class="image-showcase">
@@ -224,20 +220,6 @@
         closeBtn.addEventListener('click', () => { overlay.classList.remove('active'); });
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) { overlay.classList.remove('active'); }
-        });
-        const copyBtn = document.getElementById('copyBtn');
-        const btnText = document.getElementById('btnText');
-        const scriptCode = 'loadstring(game:HttpGet("https://beng-script.lol/scripts/Loader.lua"))()'; 
-        copyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(scriptCode).then(() => {
-                const originalText = btnText.innerText;
-                btnText.innerText = "Copied!";
-                copyBtn.style.backgroundColor = "#4ade80"; 
-                setTimeout(() => {
-                    btnText.innerText = originalText;
-                    copyBtn.style.backgroundColor = "#ffffff";
-                }, 2000);
-            });
         });
         const card = document.querySelector('.image-showcase');
         card.addEventListener('mousemove', (e) => {
