@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BENG - SCRIPT.lol - Script</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+        * { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-color: #050505;
+        }
+        body {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center top;
+        }
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 50px; z-index: 1000;
+            background-color: rgba(5, 5, 5, 0.6); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .logo { font-size: 1.25rem; font-weight: 700; color: #fff; text-decoration: none; }
+        .nav-right-group { display: flex; align-items: center; gap: 30px; }
+        .nav-links { list-style: none; display: flex; margin: 0; padding: 0; gap: 30px; }
+        .nav-links li a { text-decoration: none; color: #b0b0b0; font-size: 0.95rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links li a:hover { color: #fff; }
+        .divider { width: 1px; height: 24px; background-color: rgba(255, 255, 255, 0.15); }
+        .discord-btn {
+            display: flex; align-items: center; gap: 8px;
+            background-color: rgba(20, 20, 35, 0.8);
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            padding: 10px 24px; border-radius: 50px;
+            color: #aeb4f8; text-decoration: none; font-size: 0.9rem; font-weight: 600;
+            transition: all 0.3s;
+        }
+        .discord-btn:hover { background-color: rgba(88, 101, 242, 0.15); border-color: #5865F2; color: #fff; }
+        .discord-btn svg { width: 14px; height: 14px; fill: currentColor; }
+        .hero-container {
+            width: 100%; 
+            min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding-top: 120px;
+            padding-bottom: 50px;
+        }
+        .status-pill {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 20px; border-radius: 50px;
+            background-color: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            cursor: pointer; text-decoration: none; transition: all 0.3s ease;
+            user-select: none;
+            margin-bottom: 30px;
+        }
+        .status-pill:hover {
+            background-color: rgba(35, 35, 35, 0.8);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+        .status-dot { width: 6px; height: 6px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 6px rgba(34, 197, 94, 0.8); }
+        .pill-text { font-size: 13px; color: #d4d4d8; font-weight: 500; }
+        .pill-highlight { color: #fff; font-weight: 700; }
+        .icon-arrow { width: 12px; height: 12px; color: #71717a; opacity: 0.7; transition: 0.3s; }
+        .status-pill:hover .icon-arrow { color: #fff; transform: translate(2px, -2px); }
+        .hero-title {
+            text-align: center;
+            font-size: 4rem;
+            font-weight: 800; 
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            color: #ffffff;
+            margin: 0 0 20px 0; 
+        }
+        .hero-subtitle-gradient {
+            display: block; 
+            background: linear-gradient(180deg, #ffffff 20%, rgba(255, 255, 255, 0.4) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+        .hero-desc {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        .copy-btn {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 60px;
+        }
+        .copy-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        .copy-btn:active { transform: scale(0.98); }
+        .copy-btn svg { width: 18px; height: 18px; }
+        .code-window {
+            width: 700px;
+            max-width: 90%;
+            background-color: #08080a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.8);
+            text-align: left;
+            position: relative;
+        }
+        .window-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .window-dots {
+            display: flex; gap: 8px; margin-right: 16px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
+        
+        .filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #52525b;
+        }
+        .code-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e4e4e7;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .hl-purple { color: #c084fc; }
+        .hl-white { color: #fff; }
+        .hl-blue { color: #60a5fa; } 
+        .hl-green { color: #4ade80; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
+            z-index: 2000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            width: 650px; max-width: 90%; background-color: #09090b;
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+        .modal-header h2 { margin: 0; font-size: 1.5rem; color: #fff; font-weight: 700; }
+        .close-btn { background: none; border: none; color: #71717a; font-size: 1.5rem; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s; }
+        .close-btn:hover { color: #fff; }
+        .modal-subtitle { margin: 0 0 25px 0; color: #a1a1aa; font-size: 0.95rem; }
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .feature-card {
+            background-color: #121215; border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px;
+            transition: border-color 0.2s;
+        }
+        .feature-card:hover { border-color: rgba(255,255,255,0.15); }
+        .card-header { display: flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 700; }
+        .card-header svg { width: 18px; height: 18px; }
+        .color-yellow { color: #fbbf24; }
+        .color-red { color: #f87171; }
+        .color-blue { color: #60a5fa; }
+        .color-purple { color: #c084fc; }
+        .card-desc { margin: 0; font-size: 0.85rem; color: #a1a1aa; line-height: 1.5; }
+        .text-white { color: #fff; font-weight: 600; }
+        .badge-wip {
+            display: inline-block; font-size: 0.65rem; padding: 2px 6px;
+            border-radius: 4px; background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);
+            font-weight: 700; margin-left: 4px; vertical-align: middle;
+        }
+        @media (max-width: 600px) {
+            .hero-title { font-size: 2.5rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .navbar { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">BENG - SCRIPT</a>
+        <div class="nav-right-group">
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Games</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+            <div class="divider"></div>
+            <a href="#" class="discord-btn">Discord</a>
+        </div>
+    </nav>
+    <div class="hero-container">
+        <div class="status-pill" id="openModalBtn">
+            <span class="status-dot"></span>
+            <span class="pill-text">Script Games<span style="color:#52525b;margin:0 4px">|</span> <span class="pill-highlight">Examine</span></span>
+            <svg class="icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </div>
+        <h1 class="hero-title">
+            BENG - SCRIPT V2
+        </h1>
+        <p class="hero-desc"> New Web | SOON</p>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>How does browsing games work?</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <p class="modal-subtitle"></p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="card-header color-yellow">
+                        Automation
+                    </div>
+                    <p class="card-desc">
+                        <span class="text-white">Bank Heist Assist</span> and Register Auto-Farms.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="card-header color-red">
+                        Combat
+                    </div>
+                    <p class="card-desc">
+                        Silent Aim with wallcheck, No Recoil, Rapid Fire, and massive hitbox expansion.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="card-header color-blue">
+                        Safety
+                    </div>
+                    <p class="card-desc">
+                        Staff Check System (Evade), Friends Detection, and Anti-Ban failsafes.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="card-header color-purple">
+                        Vehicle
+                    </div>
+                    <p class="card-desc">
+                        Car Fly, Speed Boost, No Speed Camera fines, and instant Tire Repair.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const overlay = document.getElementById('modalOverlay');
+        openBtn.addEventListener('click', () => { overlay.classList.add('active'); });
+        closeBtn.addEventListener('click', () => { overlay.classList.remove('active'); });
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) { overlay.classList.remove('active'); }
+        });
+    </script>
+</body>
+</html>
