@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="cn|en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BENG - SCRIPT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="/294.GJJ.GJQW.css">
+     <link rel="stylesheet" href="/wobuchufj.css">
+  <link rel="stylesheet" href="/wobuchugj/buchu.css">
+    <link rel="stylesheet" href="/b1g5bh1gj1.css">
+        <link rel="stylesheet" href="/te12mpfk.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+      <link href="" rel="icon">
+  <style>
+    body { margin: 0; padding: 0; min-height: 100vh; background-color: #000; overflow-x: hidden; position: relative; }
+
+    .light-effect { position: fixed; border-radius: 50%; filter: blur(150px); opacity: 0.5; z-index: 0; }
+    .top-left-light { width: 600px; height: 600px; background: radial-gradient(circle, rgba(180, 31, 180, 0.8) 0%, rgba(128,0,128,0) 70%); top: -300px; left: -300px; animation: pulse 15s infinite ease-in-out; }
+    .bottom-right-light { width: 700px; height: 700px; background: radial-gradient(circle, rgba(12, 44, 148, 0.8) 0%, rgba(147,112,219,0) 70%); bottom: -350px; right: -350px; animation: pulse 20s infinite ease-in-out; }
+
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.6; } }
+
+    .content { position: relative; z-index: 10; color: white; padding: 4rem 2rem; max-width: 1000px; margin: 0 auto; text-align: center; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fadeIn { animation: fadeIn 0.4s ease-out; }
+    </style>
+<style>
+
+  .tab-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #cfcfcf;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .tab:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .tab.active {
+    background: rgba(16, 17, 109, 0.25);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: inset 0 0 8px rgba(25, 27, 153, 0.5);
+  }
+
+  .nav-ui:hover {
+    transform: translateY(4px);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.6),
+                0 0 40px rgba(99, 102, 241, 0.4);
+  }
+
+  .nav-link {
+    padding-bottom: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .indicator {
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: #6366f1;
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  .nav-link.active {
+    color: #6366f1;
+    font-weight: 600;
+  }
+  .nav-link.active .indicator {
+    width: 18px;
+  }
+
+  .nav-link:hover {
+    color: #a78bfa;
+    text-shadow: 0 0 12px rgba(99, 102, 241, 0.9);
+  }
+  .nav-link:hover .indicator {
+    width: 18px;
+    background: #8b5cf6;
+  }
+
+    .bottom-glow {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      background: radial-gradient(circle at center bottom, rgba(128,0,128,0.5), transparent 70%);
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+      animation: glowPulse 3s infinite alternate;
+    }
+
+    .button {
+      background-color: #ffffff00;
+      color: #fff;
+      width: 8.5em;
+      height: 2.9em;
+      border: #3654ff 0.2em solid;
+      border-radius: 11px;
+      text-align: right;
+      transition: all 0.6s ease;
+    }
+
+    .button:hover {
+      background-color: #3654ff;
+      cursor: pointer;
+    }
+
+    .button svg {
+      width: 1.6em;
+      margin: -0.2em 0.8em 1em;
+      position: absolute;
+      display: flex;
+      transition: all 0.6s ease;
+    }
+
+    .button:hover svg {
+      transform: translateX(5px);
+    }
+
+    .text {
+      margin: 0 1.5em
+    }
+
+    .container {
+      background-color: #2d2d2d;
+      color: white;
+      padding: 16px 30px;
+      border-radius: 25px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 18px;
+      font-family: Arial, sans-serif;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+            .status-circle {
+            background-color: rgb(173,235,179);
+        }
+
+        .tab-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(to right, rgb(55, 65, 81), rgb(75, 85, 99));
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-button:not(.active) {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .tab-button:not(.active):hover {
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+    .container .icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #9e4c9b;
+      margin-right: 10px;
+      animation: pulse 1.5s infinite;
+    }
+
+    .container .text {
+      font-weight: normal;
+    }
+    
+    @keyframes buttonAnim {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    button {
+      animation: buttonAnim 1s ease-out 0.5s forwards;
+    }
+
+    h1 {
+      animation: fadeInPage 1s ease-out 0.5s forwards;
+    }
+
+    @keyframes glowPulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 0.6; }
+      100% { opacity: 0.4; }
+    }
+    
+    @keyframes glowPulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 0.6; }
+      100% { opacity: 0.4; }
+    }
+
+.v2-gradient {
+background: linear-gradient(to right, rgb(91, 47, 148), rgb(53, 114, 101), rgb(100, 120, 187));
+  background-size: 400% 400% ;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: slowGradient 20.2s ease infinite;
+}
+
+@keyframes slowGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+  </style>
+</head>
+<body>
+<div class="particle svelte-6lxrpp" style="--size: 4.219356482134193px; --x: 21.690745962158797vw; --y: 84.78017594590735vh; --duration: 65.55508261959972s; --delay: -15.763347143466149s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 3.886689528232723px; --x: 22.603681574050803vw; --y: 95.36648604115925vh; --duration: 66.48084434738249s; --delay: -36.81258130671095s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 4.079999017788692px; --x: 71.21848127402737vw; --y: 19.063126150663123vh; --duration: 43.01997585228288s; --delay: -16.081782357544828s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 5.919498210154277px; --x: 68.6402011268354vw; --y: 58.51745544212227vh; --duration: 22.951919182992388s; --delay: -4.688704150322045s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 5.298048810734974px; --x: 74.00752360265355vw; --y: 78.84242369320597vh; --duration: 30.983319426800392s; --delay: -8.92681535648968s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 5.923960913411607px; --x: 51.38531345619251vw; --y: 87.7129277171521vh; --duration: 72.90535338396933s; --delay: -11.369229740381108s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 4.219356482134193px; --x: 21.690745962158797vw; --y: 84.78017594590735vh; --duration: 65.55508261959972s; --delay: -15.763347143466149s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 3.886689528232723px; --x: 22.603681574050803vw; --y: 95.36648604115925vh; --duration: 66.48084434738249s; --delay: -36.81258130671095s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 4.079999017788692px; --x: 71.21848127402737vw; --y: 19.063126150663123vh; --duration: 43.01997585228288s; --delay: -16.081782357544828s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 5.919498210154277px; --x: 68.6402011268354vw; --y: 58.51745544212227vh; --duration: 22.951919182992388s; --delay: -4.688704150322045s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 5.298048810734974px; --x: 74.00752360265355vw; --y: 78.84242369320597vh; --duration: 30.983319426800392s; --delay: -8.92681535648968s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 5.923960913411607px; --x: 55.38531345519251vw; --y: 37.7129237171521vh; --duration: 12.9053535438396933s; --delay: -15.369269740381128s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 4.557333470493466px; --x: 43.149572788666134vw; --y: 28.295655779648975vh; --duration: 25.618328057675164s; --delay: -31.61363880648645s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 5.296606580547473px; --x: 41.934167475982484vw; --y: 55.06840121987629vh; --duration: 35.56876168962048s; --delay: -1.9104612373402663s;"></div>
+<div class="particle svelte-6lxrpp" style="--size: 5.9239609134411607px; --x: 55.3854131345519251vw; --y: 37.712923712171521vh; --duration: 12.90535354383196933s; --delay: -15.3692697403214381128s;"></div>
+<div class="framer-1nv2mco" data-framer-name="Ray" style="... transform-origin: 100% 0% 0px;">
+  <div class="light-effect top-left-light"></div>
+  <div class="light-effect bottom-right-light"></div>
+  <div class="bottom-glow"></div>
+  <div class="light-effect center svelte-rsz7rz"></div>
+  <div class="tos-container">
+        <div class="support-link svelte-15c2cs9"></div> 
+  <div class="light-effect top-left-light"></div>
+  <div class="light-effect bottom-rig"></div>
+    <div class="bottom-glow"></div>
+
+<nav class="nav-ui w-[90%] max-w-6xl mx-auto mt-2 
+     bg-black/20 backdrop-blur-md text-white 
+     px-8 py-6 rounded-2xl flex justify-between items-center 
+     shadow-lg relative z-10 transition-all duration-300">
+  <div class="flex items-center gap-2">
+    <span class="text-indigo-300 font-medium">BENG - SCRIPT</span>
+  </div>
+      <a href="#Home" class="nav-link">
+        Home <span class="indicator"></span>
+      </a>
+</nav>
+
+  <div class="content">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-600 text-sm text-gray-200 mb-6">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+  <span>BENG - SCRIPT New Web</span>
+    </div>
+    
+<h1 class="text-5xl font-extrabold mb-4">
+  <span class="text-white">BENG - SCRIPT</span>
+  <span class="v2-gradient"> V2</span>
+</h1>
+    <div class="relative inline-block group">
+
+<div class="relative inline-block group">
+            <div class="support-link svelte-15c2cs9"></div> 
+    <button
+    class="relative px-6 py-3 text-sm font-semibold text-white bg-indigo-600/90 rounded-xl hover:bg-indigo-700/90 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 overflow-hidden"
+    onclick="window.location.href='https://discord.gg/85D9XHgVKg'"
+  >
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-xl group-hover:opacity-75 transition-opacity"
+    ></div>
+
+    <span class="relative flex items-center gap-2">
+      <svg
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        fill="none"
+        class="w-4 h-4"
+      >
+        <path
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          stroke-width="2"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+        ></path>
+      </svg>
+     Join Disocrd
+    </span>
+  </button>
+          <div class="support-link svelte-15c2cs9"></div>
+<div class="p-4 rounded-lg border border-gray-700 shadow-sm flex items-center justify-between bg-black/80 transition-colors duration-200 hover:border-blue-500 focus-within:border-blue-500">
+  <span id="text1" class="text-white cursor-pointer px-1 py-0.5 rounded text-sm" onclick="copyText('text1', this)">
+   BENG - SCRIPT
+  </span>
+  <svg onclick="copyText('text1', this)" xmlns="http://www.w3.org/2000/svg" class="copy-icon" viewBox="0 0 24 24" style="width:16px;height:16px;fill:#9ca3af;cursor:pointer;">
+    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 18H8V7h11v16z"/>
+  </svg>
+</div>
+<div id="toast-ui" style="position:fixed;top:20px;right:20px;display:flex;align-items:center;gap:8px;background-color:rgba(0,0,0,0.9);color:white;padding:6px 12px;border-radius:9999px;font-size:14px;font-weight:500;opacity:0;transform:translateY(-20px);transition:opacity 0.3s ease, transform 0.3s ease;pointer-events:none;z-index:50;">
+  <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;fill:#22c55e;">
+    <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.193-4.243-4.243a1 1 0 0 0-1.414 1.414l5 5a1 1 0 0 0 1.414 0l9.849-9.846z"/>
+  </svg>
+  <span id="toast-ui-msg">Copied, You can open your executor and enter the script!</span>
+</div>
+	
+	    <p class="text-sm text-gray-400 flex items-center justify-center gap-2">
+        <div class="support-link svelte-15c2cs9"></div> 
+     <span fill="currentColor" d="M0,12.402l35.687-4.86v34.265H0V12.402z M39.996,6.906l47.997-6.857v41.575H39.996V6.906z M0,45.083h35.687v34.453L0,74.667V45.083z M39.996,46.525h47.997v41.391l-47.997-6.677V46.525z">This script only supports mobile phones, tablets and computers - Executor</span>
+    </p>
+    
+    <section id="features" class="features sevlte-c0p8qm">
+                                                            
+    <div class="section-placeholder" style="min-height: 20px;"></div>
+</section>
+
+    <div class="w-full h-[2px] mb-0 overflow-hidden" style="background:transparent;max-width:95%;margin:0 auto -1px auto;position:relative;top:1px;z-index:11"><div class="w-full h-full" style="background:linear-gradient(to right, rgba(255,0,0,0), rgb(26, 36, 92) 50%, rgba(255,0,0,0));mix-blend-mode:normal"></div></div>
+                                                                   <div class="support-link svelte-15c2cs9"></div> 
+<div class=""><span class="svelte-c0p8qm">Support</span></div>
+        
+<div class="flex justify-center items-center gap-6 mt-10">
+  <div class="stat-card w-60 h-15 bg-[#1] svelte-c0p8qm">
+    <div class="stat-value text-lg font-bold text-indigo-400">Script supported Game?</div>
+    <div class="stat-label text-gray-300 text-sm mt-2">Click Check Game Support to see the games supported by our script!</div>
+    <a href="/Script/Game/Support/" class="link-with-arrow svelte-c0p8qm mt-4 inline-flex items-center">
+      Check Game Support
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
+  </div>
+
+  <div class="stat-card w-60 h-15 bg-[#1] svelte-c0p8qm">
+    <div class="stat-value text-lg font-bold text-indigo-400">SCRIPT NEW?</div>
+    <div class="stat-label text-gray-300 text-sm mt-2">Join our Discord and you will receive the new version. We will also update the NEW Script on the web! "Joining Discord is more convenient"</div>
+    <a href="#pricing" class="link-with-arrow svelte-c0p8qm mt-4 inline-flex items-center">
+      </svg>
+    </a>
+  </div>
+
+  <div class="stat-card w-60 h-15 bg-[#1] svelte-c0p8qm">
+    <div class="stat-value text-lg font-bold text-indigo-400">Script cannot be started - error?</div>
+    <div class="stat-label text-gray-200 text-sm mt-1">Join our Discord and open a ticket to let our developers and authors know. We'll work hard to help you!</div>
+    <a href="https://discord.gg/85D9XHgVKg" class="link-with-arrow svelte-c0p8qm mt-4 inline-flex items-center">
+      Join Disocrd
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
+  </div>
+</div>
+<div class="support-link svelte-15c2cs9"></div> 
+    <div class="w-full h-[2px] mb-0 overflow-hidden" style="background:transparent;max-width:95%;margin:0 auto -1px auto;position:relative;top:1px;z-index:11"><div class="w-full h-full" style="background:linear-gradient(to right, rgba(255,0,0,0), rgb(26, 36, 92) 50%, rgba(255,0,0,0));mix-blend-mode:normal"></div></div>
+    <div class="support-link svelte-15c2cs9"></div> 
+<a href="https://beng.bengscript.lol" class="link-with-arrow svelte-c0p8qm">Return to the official website<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+
+        <div class="support-link svelte-15c2cs9"></div>
+
+    <footer class="footer svelte-1eb5srx mt-8">
+      <div class="footer-info svelte-1eb5srx">
+        <p class="copyright svelte-1eb5srx">© 2025 BENG - Team All Rights Reserved - beng.bengscript.lol</p>
+        <div class="footer-links svelte-1eb5srx"></div>
+      </div>
+    </footer>
+    
+    <script>
+          window.onload = function () {
+    setTimeout(() => {
+      const statusDiv = document.getElementById('status');
+      statusDiv.classList.add("opacity-0");
+    </script>
+    
+    <script>
+async function copyText(id, iconElement) {
+  const text = document.getElementById(id).innerText;
+  try {
+    await navigator.clipboard.writeText(text);
+    showCheckIcon(iconElement);
+    showToastUI();
+  } catch (err) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    const success = document.execCommand('copy');
+    document.body.removeChild(textarea);
+    if (success) {
+      showCheckIcon(iconElement);
+      showToastUI();
+    } else {
+      alert('Copy failed, please copy manually');
+    }
+  }
+}
+
+function showCheckIcon(iconElement) {
+  const originalPath = iconElement.innerHTML;
+  iconElement.innerHTML = '<path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.193-4.243-4.243a1 1 0 0 0-1.414 1.414l5 5a1 1 0 0 0 1.414 0l9.849-9.846z"/>';
+  iconElement.style.fill = '#22c55e';
+  setTimeout(() => {
+    iconElement.innerHTML = originalPath;
+    iconElement.style.fill = '#9ca3af';
+  }, 1000);
+}
+
+function showToastUI() {
+  const toast = document.getElementById('toast-ui');
+  toast.style.opacity = '1';
+  toast.style.transform = 'translateY(0)';
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-20px)';
+  }, 2000);
+}
+</script>
