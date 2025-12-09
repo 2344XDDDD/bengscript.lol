@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BENG - SCRIPT.lol - Script</title>
+    <title>BENG - SCRIPT V2</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
         * { box-sizing: border-box; }
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
@@ -21,6 +22,8 @@
             background-size: 50px 50px;
             background-position: center top;
         }
+
+        /* --- 导航栏 --- */
         .navbar {
             position: fixed; top: 0; left: 0; width: 100%; height: 80px;
             display: flex; justify-content: space-between; align-items: center;
@@ -45,13 +48,18 @@
         }
         .discord-btn:hover { background-color: rgba(88, 101, 242, 0.15); border-color: #5865F2; color: #fff; }
         .discord-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+        /* --- 主体区域 --- */
         .hero-container {
             width: 100%; 
             min-height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             padding-top: 120px;
-            padding-bottom: 50px;
+            padding-bottom: 80px;
+            perspective: 1000px; /* 开启3D透视 */
         }
+
+        /* 胶囊按钮 */
         .status-pill {
             display: flex; align-items: center; gap: 12px;
             padding: 10px 20px; border-radius: 50px;
@@ -73,102 +81,65 @@
         .pill-highlight { color: #fff; font-weight: 700; }
         .icon-arrow { width: 12px; height: 12px; color: #71717a; opacity: 0.7; transition: 0.3s; }
         .status-pill:hover .icon-arrow { color: #fff; transform: translate(2px, -2px); }
+
+        /* 标题 */
         .hero-title {
-            text-align: center;
-            font-size: 4rem;
-            font-weight: 800; 
-            line-height: 1.05;
-            letter-spacing: -0.04em;
-            color: #ffffff;
+            text-align: center; font-size: 4rem; font-weight: 800; 
+            line-height: 1.05; letter-spacing: -0.04em; color: #ffffff;
             margin: 0 0 20px 0; 
         }
-        .hero-subtitle-gradient {
-            display: block; 
-            background: linear-gradient(180deg, #ffffff 20%, rgba(255, 255, 255, 0.4) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent;
-        }
-        .hero-desc {
-            color: #a1a1aa;
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-            font-weight: 400;
-        }
+        .hero-desc { color: #a1a1aa; font-size: 1.1rem; margin-bottom: 40px; font-weight: 400; }
+
+        /* 复制按钮 */
         .copy-btn {
-            background-color: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            display: flex; align-items: center; gap: 10px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-bottom: 60px;
+            background-color: #ffffff; color: #000000; border: none;
+            padding: 14px 32px; border-radius: 50px; font-size: 1rem; font-weight: 600;
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 60px;
         }
-        .copy-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        }
+        .copy-btn:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
         .copy-btn:active { transform: scale(0.98); }
         .copy-btn svg { width: 18px; height: 18px; }
-        .code-window {
-            width: 700px;
+
+        /* --- 图片容器 (替代了原来的代码框) --- */
+        .image-showcase {
+            width: 800px;
             max-width: 90%;
-            background-color: #08080a;
-            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.8);
-            text-align: left;
+            /* 3D 效果核心 */
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+            
             position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #0e0e11;
         }
-        .window-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
+
+        .image-showcase img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            /* 让图片稍微有点亮度和对比度 */
+            filter: contrast(1.05) brightness(1.02);
         }
-        .window-dots {
-            display: flex; gap: 8px; margin-right: 16px;
+
+        /* 图片反光层 */
+        .image-shine {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.1), transparent 50%);
+            z-index: 10; pointer-events: none; opacity: 0; transition: opacity 0.3s;
+            border-radius: 12px; mix-blend-mode: overlay;
         }
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .dot-red { background-color: #ff5f56; }
-        .dot-yellow { background-color: #ffbd2e; }
-        .dot-green { background-color: #27c93f; }
-        
-        .filename {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #52525b;
-        }
-        .code-content {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: #e4e4e7;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        .hl-purple { color: #c084fc; }
-        .hl-white { color: #fff; }
-        .hl-blue { color: #60a5fa; } 
-        .hl-green { color: #4ade80; }
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
-            z-index: 2000; display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: all 0.3s ease;
-        }
+        .image-showcase:hover .image-shine { opacity: 1; }
+
+
+        /* --- 弹窗样式 --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            width: 650px; max-width: 90%; background-color: #09090b;
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .modal-content { width: 650px; max-width: 90%; background-color: #09090b; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-overlay.active .modal-content { transform: scale(1); }
         .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
         .modal-header h2 { margin: 0; font-size: 1.5rem; color: #fff; font-weight: 700; }
@@ -176,26 +147,15 @@
         .close-btn:hover { color: #fff; }
         .modal-subtitle { margin: 0 0 25px 0; color: #a1a1aa; font-size: 0.95rem; }
         .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .feature-card {
-            background-color: #121215; border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px;
-            transition: border-color 0.2s;
-        }
+        .feature-card { background-color: #121215; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s; }
         .feature-card:hover { border-color: rgba(255,255,255,0.15); }
         .card-header { display: flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 700; }
         .card-header svg { width: 18px; height: 18px; }
-        .color-yellow { color: #fbbf24; }
-        .color-red { color: #f87171; }
-        .color-blue { color: #60a5fa; }
-        .color-purple { color: #c084fc; }
+        .color-yellow { color: #fbbf24; } .color-red { color: #f87171; } .color-blue { color: #60a5fa; } .color-purple { color: #c084fc; }
         .card-desc { margin: 0; font-size: 0.85rem; color: #a1a1aa; line-height: 1.5; }
         .text-white { color: #fff; font-weight: 600; }
-        .badge-wip {
-            display: inline-block; font-size: 0.65rem; padding: 2px 6px;
-            border-radius: 4px; background: rgba(251, 191, 36, 0.1);
-            color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);
-            font-weight: 700; margin-left: 4px; vertical-align: middle;
-        }
+        .badge-wip { display: inline-block; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; background: rgba(251, 191, 36, 0.1); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); font-weight: 700; margin-left: 4px; vertical-align: middle; }
+
         @media (max-width: 600px) {
             .hero-title { font-size: 2.5rem; }
             .features-grid { grid-template-columns: 1fr; }
@@ -204,6 +164,7 @@
     </style>
 </head>
 <body>
+    <!-- 导航栏 -->
     <nav class="navbar">
         <a href="#" class="logo">BENG - SCRIPT</a>
         <div class="nav-right-group">
@@ -213,63 +174,61 @@
                 <li><a href="#">FAQ</a></li>
             </ul>
             <div class="divider"></div>
-            <a href="#" class="discord-btn">Discord</a>
+            <a href="#" class="discord-btn">Discord <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
         </div>
     </nav>
+
+    <!-- 主体区域 -->
     <div class="hero-container">
+        <!-- 胶囊弹窗触发器 -->
         <div class="status-pill" id="openModalBtn">
             <span class="status-dot"></span>
-            <span class="pill-text">Script Games<span style="color:#52525b;margin:0 4px">|</span> <span class="pill-highlight">Examine</span></span>
+            <span class="pill-text">Script Games <span style="color:#52525b;margin:0 4px">|</span> <span class="pill-highlight">Examine</span></span>
             <svg class="icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
         </div>
-        <h1 class="hero-title">
-            BENG - SCRIPT V2
-        </h1>
+
+        <!-- 标题 -->
+        <h1 class="hero-title">BENG - SCRIPT V2</h1>
+        
+        <!-- 副标题 -->
         <p class="hero-desc"> New Web | SOON</p>
+
+        <!-- 复制脚本按钮 -->
+        <button class="copy-btn" id="copyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span id="btnText">Copy Script</span>
+        </button>
+
+        <!-- ★★★ 这里是图片展示区域 ★★★ -->
+        <!-- 替换原有的代码框 -->
+        <div class="image-showcase">
+            <!-- 请把 src 改成你自己的图片链接 -->
+            <img src="https://bengscript.lol/BENG%20-%20SCRIPTdownload/屏幕截图 2025-12-09 214033.png" alt="Script Interface">
+            <!-- 反光层 -->
+            <div class="image-shine"></div>
+        </div>
+
+    </div>
+
+    <!-- 弹窗 (内容不变) -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>How does browsing games work?</h2>
                 <button class="close-btn" id="closeModalBtn">&times;</button>
             </div>
-            <p class="modal-subtitle"></p>
+            <p class="modal-subtitle">Top-rated features available instantly.</p>
             <div class="features-grid">
-                <div class="feature-card">
-                    <div class="card-header color-yellow">
-                        Automation
-                    </div>
-                    <p class="card-desc">
-                        <span class="text-white">Bank Heist Assist</span> and Register Auto-Farms.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="card-header color-red">
-                        Combat
-                    </div>
-                    <p class="card-desc">
-                        Silent Aim with wallcheck, No Recoil, Rapid Fire, and massive hitbox expansion.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="card-header color-blue">
-                        Safety
-                    </div>
-                    <p class="card-desc">
-                        Staff Check System (Evade), Friends Detection, and Anti-Ban failsafes.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="card-header color-purple">
-                        Vehicle
-                    </div>
-                    <p class="card-desc">
-                        Car Fly, Speed Boost, No Speed Camera fines, and instant Tire Repair.
-                    </p>
-                </div>
+                <div class="feature-card"><div class="card-header color-yellow">Automation</div><p class="card-desc"><span class="text-white">Bank Heist Assist</span> and Register Auto-Farms.</p></div>
+                <div class="feature-card"><div class="card-header color-red">Combat</div><p class="card-desc">Silent Aim with wallcheck, No Recoil, Rapid Fire.</p></div>
+                <div class="feature-card"><div class="card-header color-blue">Safety</div><p class="card-desc">Staff Check System (Evade), Friends Detection.</p></div>
+                <div class="feature-card"><div class="card-header color-purple">Vehicle</div><p class="card-desc">Car Fly, Speed Boost, No Speed Camera fines.</p></div>
             </div>
         </div>
     </div>
+
     <script>
+        // 弹窗逻辑
         const openBtn = document.getElementById('openModalBtn');
         const closeBtn = document.getElementById('closeModalBtn');
         const overlay = document.getElementById('modalOverlay');
@@ -277,6 +236,45 @@
         closeBtn.addEventListener('click', () => { overlay.classList.remove('active'); });
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) { overlay.classList.remove('active'); }
+        });
+
+        // 复制按钮逻辑 (现在只是复制一个示例链接，你可以改)
+        const copyBtn = document.getElementById('copyBtn');
+        const btnText = document.getElementById('btnText');
+        const scriptCode = 'loadstring(game:HttpGet("https://beng-script.lol/scripts/Loader.lua"))()'; // 这里是要复制的内容
+
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(scriptCode).then(() => {
+                const originalText = btnText.innerText;
+                btnText.innerText = "Copied!";
+                copyBtn.style.backgroundColor = "#4ade80"; 
+                setTimeout(() => {
+                    btnText.innerText = originalText;
+                    copyBtn.style.backgroundColor = "#ffffff";
+                }, 2000);
+            });
+        });
+
+        // 图片 3D 倾斜效果逻辑
+        const card = document.querySelector('.image-showcase');
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            // 计算旋转 (数值越小旋转越剧烈，这里设缓和一点)
+            const rotateX = ((y - centerY) / centerY) * -5;
+            const rotateY = ((x - centerX) / centerX) * 5;
+
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
         });
     </script>
 </body>
