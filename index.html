@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -95,33 +95,64 @@
             animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             animation-delay: 0.3s;
         }
-        .btn-anim-container {
-            margin-bottom: 50px;
-            opacity: 0;
-            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            animation-delay: 0.4s;
-        }
-        .btn-resellers {
-            background-color: #000000;
-            color: #ffffff;
-            border: 1px solid #333333;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 10px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        .btn-resellers:hover {
-            transform: translateY(-6px);
-            background-color: #0a0a0a;
-            border-color: #ffffff;
-            box-shadow: 0 15px 30px -10px rgba(255, 255, 255, 0.15); 
-        }
-        .btn-resellers:focus {
-            outline: none;
-        }
+.btn-anim-container {
+    margin-bottom: 50px;
+    display: flex;
+    gap: 20px;
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.4s;
+}
+.btn-resellers {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #151515;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-resellers:hover {
+    background-color: #0a0a0a;
+    border-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+.btn-resellers:focus {
+    outline: none;
+}
+.stats-section {
+    display: flex;
+    gap: 80px;
+    margin: 40px 0 60px 0;
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.45s;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.stat {
+    text-align: center;
+    min-width: 120px;
+}
+.stat-number {
+    font-size: 50px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+.stat-label {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #a1a1aa;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+}
         .image-anim-wrapper {
             opacity: 0;
             animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
@@ -179,6 +210,15 @@
             from { opacity: 0; transform: translateY(60px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @media (max-width: 600px) {
+            .stats-section {
+             gap: 40px;
+         }
+         .stat {
+             min-width: 45%;
+            margin-bottom: 20px;
+          }
+       }
     </style>
 </head>
 <body>
@@ -191,7 +231,7 @@
                 <li><a href="#">FAQ</a></li>
             </ul>
             <div class="divider"></div>
-            <a href="https://discord.gg/85D9XHgVKg" class="discord-btn">Discord</a>
+<button class="btn-resellers">Join Discord</button>
         </div>
     </nav>
     <div class="hero-container">
@@ -203,12 +243,20 @@
         <h1 class="hero-title">BENG - SCRIPT V 2</h1>
         <p class="hero-desc"> You Next Script </p>
         
-        <div class="btn-anim-container">
-            <button class="btn-resellers">
-                Get - Script
-            </button>
-        </div>
-
+<div class="btn-anim-container">
+    <button class="btn-resellers">Get - Script</button>
+    <button class="btn-resellers">Join Discord</button>
+</div>
+<div class="stats-section">
+    <div class="stat">
+        <div class="stat-number" data-target="6000" data-format="compact">0</div>
+        <div class="stat-label">Script Users</div>
+    </div>
+    <div class="stat">
+        <div class="stat-number" data-target="4" data-format="compact">0</div>
+        <div class="stat-label">Script Game</div>
+    </div>
+</div>
         <div class="image-anim-wrapper">
             <div class="image-showcase">
                 <img src="https://bengscript.lol/BENG%20-%20SCRIPTdownload/屏幕截图 2025-12-10 132411.png" alt="SCRIPT_ICON">
@@ -217,19 +265,26 @@
         </div>
     </div>
     
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>How does browsing games work?</h2>
-                <button class="close-btn" id="closeModalBtn">&times;</button>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-light-bg"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>How does browsing games work?</h2>
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+        </div>
+        <p class="modal-subtitle">Top-rated features available instantly.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="card-header color-yellow">Hebei Script</div>
+                <p class="card-desc"><span class="text-white">Auto </span>Money</p>
             </div>
-            <p class="modal-subtitle">Top-rated features available instantly.</p>
-            <div class="features-grid">
-                <div class="feature-card"><div class="card-header color-yellow">Hebei Script</div><p class="card-desc"><span class="text-white">Auto </span>Money</p></div>
-                <div class="feature-card"><div class="card-header color-yellow">SOON</div><p class="card-desc">SOON.</p></div>
+            <div class="feature-card">
+                <div class="card-header color-yellow">SOON</div>
+                <p class="card-desc">SOON.</p>
             </div>
         </div>
     </div>
+</div>
     <script>
         const openBtn = document.getElementById('openModalBtn');
         const closeBtn = document.getElementById('closeModalBtn');
@@ -255,6 +310,36 @@
         card.addEventListener('mouseleave', () => {
             card.style.transform = 'rotateX(0) rotateY(0)';
         });
+(function animateStats(){
+  const items = document.querySelectorAll('.stat-number');
+  const duration = 1500;
+  function format(val, type) {
+      if(type === "percent") return val.toFixed(2) + "%";
+      if(type === "compact") {
+          if(val >= 1_000_000) return (val/1_000_000).toFixed(0) + "M+";
+          if(val >= 1_000) return (val/1_000).toFixed(0) + "K+";
+          return Math.floor(val);
+      }
+      return val;
+  }
+  items.forEach(el => {
+      const target = parseFloat(el.getAttribute("data-target"));
+      const type = el.getAttribute("data-format");
+      const start = 0;
+      const t0 = performance.now();
+      function frame(t){
+          let p = Math.min((t - t0) / duration, 1);
+          p = 1 - Math.pow(1 - p, 3);
+          let current = start + (target - start) * p;
+          el.textContent = type === "percent" ? format(current, "percent") :
+                           type === "compact" ? format(current, "compact") :
+                           Math.floor(current);
+          if(p < 1) requestAnimationFrame(frame);
+          else el.textContent = format(target, type);
+      }
+      requestAnimationFrame(frame);
+  });
+})();
     </script>
 </body>
 </html>
