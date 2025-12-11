@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Arceney.cc - #1 Undetected Scripts for Roblox">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="cdd/style.css">
+    <link rel="stylesheet" href="cdd/update.css">
+    
+    <meta property="og:title" content="ARCENEY.CC">
+    <meta property="og:description" content="THE ALL NEW. ARCENEY.CC&#10;#1 UNDETECTABLE ROBLOX CHEATS">
+    <meta property="og:image" content="https://arceney.cc/static/logo.webp">
+    <meta property="og:url" content="https://arceney.cc">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Arceney.cc">
+    <link rel="icon" href="static/logo.webp" type="image/x-icon">
+    <link rel="apple-touch-icon" href="static/logo.webp">
+    <title>Arceney.cc | #1 Undetected Roblox Scripts</title>
+</head>
+<body>
+    <nav class="anim">
+        <a class="nav-left" href="/">
+            <img class="nav-img" src="static/logo.webp">
+            <h1 class="nav-title">ARCENEY.CC</h1>
+        </a>
+        <div class="nav-bth">
+            <i class="fa-solid fa-list nav-fa"></i>
+        </div>
+        <div class="nav-right">
+            <a class="nav-button" href="/"><i class="fa-solid fa-house nav-icon"></i> Home</a>
+            <a class="nav-button" href="/update"><i class="fa-solid fa-table-list"></i> Update</a>
+            <a class="nav-button" href="/script"><i class="fa-solid fa-code"></i> Loader</a>
+            <a class="nav-button" href="https://github.com/4lpaca-pin/Arceney/blob/main/examples/api/README.md"><i class="fa-solid fa-server"></i> API</a>
+            <a class="nav-button" href="/discord"><i class="fa-brands fa-discord"></i> Discord</a>
+        </div>
+        <div class="line"></div>
+    </nav>
+
+    <div class="main-pg loader">
+        <h1 class="main-ti anim" id="">ARCENEY.CC</h1>
+        <span class="main-dec anim">Loading</span>
+
+        <div class="mainload">
+            <h1 class="titles"><i class="fa-solid fa-calendar-days"></i> </h1>
+
+            <div class="mdf">
+                
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    const k = document.querySelector('.mdf');
+    const titles = document.querySelector('.titles');
+    const mainload = document.querySelector('.mainload');
+    const maind = document.querySelector('.main-dec');
+
+    fetch("/api/fetch-update").then(e=>{
+        e.json().then(json=>{   
+            titles.innerHTML = '<i class="fa-solid fa-calendar-days"></i> ' + json.title;
+            
+            const datem = (new Date(json.timestamp)).toLocaleDateString('en-GB');
+
+            k.innerHTML = marked.parse(json.content);
+
+            maind.innerHTML = `Latest Updated by <img src="/profiles/${json.author}.png" class="udpr"> <strong style="color: var(--text-sec);">${json.author}</strong> on <strong style="color: var(--text-sec);">${datem}</strong>`
+        })
+    })
+</script>
+<script src="cdd/main.js"></script>
+</html>
