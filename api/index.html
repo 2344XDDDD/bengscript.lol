@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>高级卡密生成器</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 50px; background: #1a1a1a; color: #fff; }
+        .container { max-width: 600px; margin: 0 auto; background: #2d2d2d; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { margin-bottom: 30px; color: #fff; }
+        
+        .btn-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        
+        button { padding: 12px 24px; font-size: 16px; cursor: pointer; border: none; color: white; border-radius: 8px; transition: 0.2s; }
+        .btn-normal { background: #007bff; }
+        .btn-format { background: #8e44ad; } /* 紫色 */
+        .btn-vip { background: #f39c12; }    /* 金色 */
+        button:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        #key-display { 
+            margin-top: 20px; 
+            padding: 15px; 
+            font-size: 24px; 
+            color: #0f0; 
+            background: #000; 
+            border: 1px solid #444; 
+            border-radius: 5px; 
+            font-family: monospace; 
+            word-break: break-all;
+            cursor: pointer;
+        }
+        #key-display:active { background: #111; }
+        .tip { font-size: 12px; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔑 Roblox 卡密控制台</h1>
+        
+        <div class="btn-group">
+            <button class="btn-normal" onclick="createKey('normal')">生成普通卡密</button>
+            <button class="btn-format" onclick="createKey('formatted')">生成序列号版</button>
+            <button class="btn-vip" onclick="createKey('vip')">生成 VIP 卡密</button>
+        </div>
+        
+        <div id="key-display" onclick="copyKey()" title="点击复制">等待生成...</div>
+        <div class="tip">点击卡密即可复制</div>
+    </div>
+
+    <script>
+        // ⚠️ 记得替换成你自己的 Worker 地址！
+        const API_URL = "https://sweet-unit-0635.2176671594.workers.dev"; 
+
+        async function createKey(type) {
+            const display = document.getElementById('key-display');
+            display.innerText = "生成中...";
+            display.style.color = "#aaa";
+
+            try {
+                // 发送请求给 Cloudflare Worker
+                const response = await fetch(`${API_URL}/gen-key?type=${type}`);
+                const data = await response.json();
+                
+                // 显示结果
+                display.innerText = data.key;
+                display.style.color = "#0f0";
+            } catch (error) {
+                display.innerText = "生成失败，请检查网络或后端链接";
+                display.style.color = "red";
+                console.error(error);
+            }
+        }
+
+        function copyKey() {
+            const text = document.getElementById('key-display').innerText;
+            if (text && text !== "等待生成..." && text !== "生成中...") {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert("卡密已复制: " + text);
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
