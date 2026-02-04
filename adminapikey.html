@@ -397,7 +397,7 @@
             font-size: 14px; 
             color: #888; 
             transition: 0.3s; 
-        }
+}
         .option:hover { 
             background: rgba(255,255,255,0.1); 
             color: #fff; 
@@ -555,7 +555,12 @@
     </div>
 
     <script>
-        const API_BASE_URL = 'https://key-system.2176671594.workers.dev';
+        // 修复1: 使用相对路径，避免跨域问题
+        const API_BASE_URL = window.location.origin;
+        
+        // 或者如果您的 Workers 脚本部署在当前域名的 /api 路径下：
+        // const API_BASE_URL = window.location.origin + '/api';
+        
         let mode = 'work'; // 默认提供商
         
         // 显示提示消息
@@ -599,13 +604,53 @@
             }
             
             try {
-                const response = await fetch(`${API_BASE_URL}/admin`);
+                // 修复2: 添加完整的错误处理和请求头
+                const response = await fetch(`${API_BASE_URL}/admin`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${password}`
+                    },
+                    mode: 'cors', // 允许跨域
+                    credentials: 'same-origin' // 发送凭据
+                });
                 
                 if (response.ok) {
-                    const html = await response.text();
+                    // 修复3: 根据实际响应类型处理
+                    const contentType = response.headers.get('content-type');
                     
-                    // 由于/admin返回的是完整HTML，我们需要直接显示配置表单
-                    // 这里简化处理，直接显示配置表单
+                    if (contentType && contentType.includes('application/json')) {
+                        // JSON 响应
+                        const data = await response.json();
+                        
+                        // 如果返回的是配置数据，填充表单
+                        if (data.config) {
+                            // 填充表单字段
+                            document.getElementById('sk').value = data.config.secret_key || '';
+                            document.getElementById('km').value = data.config.key_mode || 'static';
+                            
+                            // 设置提供商模式
+                            const provider = data.config.provider_type || 'work';
+                            let providerText = 'Work (Custom)';
+                            if (provider === 'linkvertise') providerText = 'Linkvertise';
+                            if (provider === 'lootlabs') providerText = 'LootLabs';
+                            
+                            selectMode(provider, providerText);
+                            
+                            // 填充其他字段
+                            document.getElementById('work_url').value = data.config.work_url || '';
+                            document.getElementById('lv_id').value = data.config.lv_id || '';
+                            document.getElementById('lv_secret').value = data.config.lv_secret || '';
+                            document.getElementById('ll_link').value = data.config.ll_link || '';
+                            document.getElementById('ll_secret').value = data.config.ll_secret || '';
+                        }
+                    } else {
+                        // HTML 响应（原始逻辑）
+                        const html = await response.text();
+                        // 这里可能需要解析 HTML 来获取配置，但建议后端返回 JSON
+                    }
+                    
+                    // 显示配置表单
                     document.getElementById('configForm').style.display = 'block';
                     
                     // 设置回调URL
@@ -614,11 +659,32 @@
                     
                     showToast('配置表单已加载', 'success');
                 } else {
-                    showToast('Configuration loading failed. Check network connection.', 'error');
+                    const errorText = await response.text();
+                    showToast(`加载失败: ${response.status} ${errorText}`, 'error');
                 }
             } catch (error) {
-                showToast('Server Error: ' + error.message, 'error');
+                // 修复4: 更详细的错误信息
                 console.error('加载配置失败:', error);
+                
+                // 提供更具体的错误信息
+                let errorMsg = 'Server Error: ';
+                
+                if (error.name === 'TypeError') {
+                    if (error.message.includes('Failed to fetch')) {
+                        errorMsg += '无法连接到服务器。请检查：\n1. 服务器是否运行\n2. 网络连接\n3. CORS配置';
+                    } else {
+                        errorMsg += error.message;
+                    }
+                } else {
+                    errorMsg += error.message;
+                }
+                
+                showToast(errorMsg, 'error');
+                
+                // 如果后端不可用，仍然显示表单（用于离线配置）
+                document.getElementById('configForm').style.display = 'block';
+                const currentDomain = window.location.origin;
+                document.getElementById('callbackUrl').textContent = currentDomain;
             }
         }
         
@@ -633,6 +699,7 @@
             }
             
             b.innerText = 'Syncing...';
+            b.disabled = true;
             
             const payload = {
                 password: password,
@@ -650,19 +717,33 @@
                 const res = await fetch(`${API_BASE_URL}/save-config`, { 
                     method: 'POST', 
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${password}`
                     },
-                    body: JSON.stringify(payload) 
+                    body: JSON.stringify(payload),
+                    mode: 'cors'
                 });
                 
-                const r = await res.json();
                 const t = document.getElementById('toast');
                 
-                if (r.success) {
-                    t.innerText = 'Success: Configuration saved';
-                    t.style.background = '#4CAF50';
+                if (res.ok) {
+                    try {
+                        const r = await res.json();
+                        if (r.success) {
+                            t.innerText = 'Success: Configuration saved';
+                            t.style.background = '#4CAF50';
+                        } else {
+                            t.innerText = 'Error: ' + (r.msg || 'Unknown error');
+                            t.style.background = '#f44336';
+                        }
+                    } catch (jsonError) {
+                        const text = await res.text();
+                        t.innerText = `Success: ${text}`;
+                        t.style.background = '#4CAF50';
+                    }
                 } else {
-                    t.innerText = 'Error: ' + (r.msg || 'Unknown error');
+                    const errorText = await res.text();
+                    t.innerText = `Error ${res.status}: ${errorText}`;
                     t.style.background = '#f44336';
                 }
                 
@@ -670,11 +751,12 @@
                 setTimeout(() => t.classList.remove('show'), 3000);
                 
             } catch (error) {
-                showToast('Error: ' + error.message, 'error');
                 console.error('保存配置失败:', error);
+                showToast('Error: ' + error.message, 'error');
             }
             
             b.innerText = 'Apply Configuration';
+            b.disabled = false;
         }
         
         // 页面加载完成后初始化
@@ -694,9 +776,23 @@
                 }
             });
             
-            // 初始加载时显示配置表单（可选）
-            // loadConfig();
+            // 测试连接性
+            testConnection();
         });
+        
+        // 测试服务器连接
+        async function testConnection() {
+            try {
+                // 尝试一个简单的请求
+                const response = await fetch(API_BASE_URL, {
+                    method: 'HEAD',
+                    mode: 'no-cors' // 简单测试，不关心响应内容
+                });
+                console.log('服务器连接正常');
+            } catch (error) {
+                console.warn('服务器连接测试失败:', error.message);
+            }
+        }
     </script>
 </body>
 </html>
