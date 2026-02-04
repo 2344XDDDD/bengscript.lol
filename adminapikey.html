@@ -1,1 +1,196 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>BENG - SCRIPT - KEY API</title> <link rel="stylesheet" href="/next/js/BJEGgjhwhgUHQ2hvuwGH2.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <style> body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; background: #0a0a0a; color: #fff; } .site-nav { background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); padding: 15px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; } .nav-links { display: flex; gap: 20px; } .nav-links a { color: #fff; text-decoration: none; font-size: 14px; transition: color 0.3s; } .nav-links a:hover { color: #007bff; } .logo { font-weight: bold; font-size: 18px; color: #fff; } .site-footer { text-align: center; padding: 20px; color: #666; font-size: 12px; margin-top: 40px; } </style> </head> <body> <nav class="site-nav"> <div class="logo">BENG - SCRIPT</div> <div class="nav-links"> <a href="/">Home</a> <a href="key">Key system</a> <a href="admin-key" style="color: #007bff;">manage</a> </div> </nav> <main> <div class="key-system-body"> <div class="key-system-container"> <h2 class="key-system-h2">API Admin - BENG SCRIPT Key</h2> <div class="key-input-group"> <span class="key-label">Load configuration administrator password</span> <input type="password" id="adminPassword" class="key-input" placeholder="••••••••" required> </div> <button class="key-btn" onclick="loadConfig()"> <i class="fas fa-cog"></i> Load configuration </button> <div id="configForm" style="display: none; margin-top: 30px;"> <div class="key-input-group"> <span class="key-label">Static key | prefix</span> <input type="text" id="secretKey" class="key-input" placeholder="Set a fixed key"> </div> <div class="key-input-group"> <span class="key-label">Key mode</span> <select id="keyMode" class="key-select"> <option value="static">Fixed key</option> <option value="random">Random key | 24 hours</option> </select> </div> <div class="key-input-group"> <span class="key-label">Advertising Provider</span> <div class="key-custom-select" id="providerSelect" onclick="toggleSelect()"> <div class="key-select-trigger"> <span id="providerText">Work.ink</span> <i class="fas fa-chevron-down"></i> </div> <div class="key-options-list"> <div class="key-option" onclick="selectProvider('work', 'Work')">Work.ink</div> <div class="key-option" onclick="selectProvider('linkvertise', 'Linkvertise')">Linkvertise</div> <div class="key-option" onclick="selectProvider('lootlabs', 'LootLabs')">LootLabs</div> </div> </div> </div> <div id="panel-work" class="key-panel-wrap active"> <div class="key-input-group"> <span class="key-label">Work redirect link</span> <input type="text" id="workUrl" class="key-input" placeholder="https://work.ink/..."> </div> </div> <div id="panel-linkvertise" class="key-panel-wrap"> <div class="key-input-group"> <span class="key-label">Linkvertise User ID</span> <input type="text" id="lvId" class="key-input"> </div> <div class="key-input-group"> <span class="key-label">Linkvertise Secret Key</span> <input type="password" id="lvSecret" class="key-input"> </div> </div> <div id="panel-lootlabs" class="key-panel-wrap"> <div class="key-input-group"> <span class="key-label">LootLabs link</span> <input type="text" id="llLink" class="key-input" placeholder="https://lootlink.org/..."> </div> <div class="key-input-group"> <span class="key-label">LootLabs Secret Key</span> <input type="password" id="llSecret" class="key-input"> </div> </div> <button class="key-btn key-btn-success" onclick="saveConfig()"> <i class="fas fa-save"></i> Save configuration </button> <div id="saveResult" class="key-message"></div> </div> </div> </div> </main> <footer class="site-footer"> <p>&copy; 2026 BENG. All rights reserved.</p> </footer> <div id="key-toast"></div> <script src="next/js/GJH74NVWI2ghwk2.js"></script> </body> </html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>密钥系统管理</title>
+    <link rel="stylesheet" href="/next/js/BJEGgjhwhgUHQ2hvuwGH2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="key-system-body">
+        <div class="key-system-container">
+            <h2 class="key-system-h2">⚙️ 本地配置管理</h2>
+            
+            <div class="key-input-group">
+                <span class="key-label">管理员密码</span>
+                <input type="password" id="adminPassword" class="key-input" placeholder="默认密码: XXX285JBHW">
+            </div>
+            
+            <button class="key-btn" onclick="loadLocalConfig()">
+                <i class="fas fa-cog"></i> 加载本地配置
+            </button>
+            
+            <div id="configForm" style="display: none; margin-top: 30px;">
+                <div class="key-input-group">
+                    <span class="key-label">静态密钥 / 前缀</span>
+                    <input type="text" id="secretKey" class="key-input" value="KEY-">
+                </div>
+                
+                <div class="key-input-group">
+                    <span class="key-label">密钥模式</span>
+                    <select id="keyMode" class="key-select">
+                        <option value="static">固定密钥</option>
+                        <option value="random" selected>随机密钥 (24小时)</option>
+                    </select>
+                </div>
+                
+                <div class="key-input-group">
+                    <span class="key-label">广告提供商</label>
+                    <select id="providerType" class="key-select" onchange="updateProviderConfig()">
+                        <option value="work" selected>Work (自定义)</option>
+                        <option value="linkvertise">Linkvertise</option>
+                        <option value="lootlabs">LootLabs</option>
+                    </select>
+                </div>
+                
+                <div id="providerConfig">
+                    <div class="key-input-group">
+                        <span class="key-label">广告链接</span>
+                        <input type="text" id="adUrl" class="key-input" placeholder="https://example.com">
+                    </div>
+                </div>
+                
+                <button class="key-btn key-btn-success" onclick="saveLocalConfig()">
+                    <i class="fas fa-save"></i> 保存配置到本地
+                </button>
+                
+                <div id="saveResult" class="key-message"></div>
+                
+                <div class="key-success-box">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>配置使用说明：</strong><br>
+                    1. 保存配置后，复制下方配置代码<br>
+                    2. 粘贴到你的 Cloudflare Worker 中<br>
+                    3. 或直接在 Worker 中设置
+                </div>
+                
+                <div id="configCode" style="display: none; margin-top: 20px;">
+                    <pre id="configJson" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; overflow: auto; font-size: 12px;"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 管理员密码
+        const ADMIN_PASSWORD = "XXX285JBHW";
+        
+        // 显示消息
+        function showMessage(message, type = 'info') {
+            const resultDiv = document.getElementById('saveResult');
+            resultDiv.innerHTML = `<div style="color: ${type === 'success' ? '#0f0' : type === 'error' ? '#f00' : '#fff'}; text-align: center;">${message}</div>`;
+            
+            // 自动隐藏
+            setTimeout(() => {
+                resultDiv.innerHTML = '';
+            }, 3000);
+        }
+        
+        // 加载本地配置
+        function loadLocalConfig() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password !== ADMIN_PASSWORD) {
+                showMessage('❌ 密码错误！', 'error');
+                return;
+            }
+            
+            // 从 localStorage 加载配置
+            const savedConfig = localStorage.getItem('keySystemConfig');
+            if (savedConfig) {
+                const config = JSON.parse(savedConfig);
+                fillForm(config);
+            }
+            
+            document.getElementById('configForm').style.display = 'block';
+            showMessage('✅ 配置已加载', 'success');
+        }
+        
+        // 填充表单
+        function fillForm(config) {
+            document.getElementById('secretKey').value = config.secret_key || 'KEY-';
+            document.getElementById('keyMode').value = config.key_mode || 'random';
+            document.getElementById('providerType').value = config.provider_type || 'work';
+            document.getElementById('adUrl').value = getProviderUrl(config);
+            
+            updateProviderConfig();
+        }
+        
+        // 获取提供商 URL
+        function getProviderUrl(config) {
+            if (config.provider_type === 'work') {
+                return config.work_url || '';
+            } else if (config.provider_type === 'linkvertise') {
+                return `https://link-to.net/${config.lv_id || ''}/dynamic`;
+            } else if (config.provider_type === 'lootlabs') {
+                return config.ll_link || '';
+            }
+            return '';
+        }
+        
+        // 更新提供商配置显示
+        function updateProviderConfig() {
+            const type = document.getElementById('providerType').value;
+            let label = '';
+            
+            if (type === 'work') {
+                label = 'Work 重定向链接';
+            } else if (type === 'linkvertise') {
+                label = 'Linkvertise 链接（包含ID）';
+            } else if (type === 'lootlabs') {
+                label = 'LootLabs 链接';
+            }
+            
+            document.querySelector('#providerConfig .key-label').textContent = label;
+        }
+        
+        // 保存本地配置
+        function saveLocalConfig() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password !== ADMIN_PASSWORD) {
+                showMessage('❌ 密码错误！', 'error');
+                return;
+            }
+            
+            const config = {
+                secret_key: document.getElementById('secretKey').value,
+                key_mode: document.getElementById('keyMode').value,
+                provider_type: document.getElementById('providerType').value,
+                work_url: '',
+                lv_id: '',
+                lv_secret: '',
+                ll_link: '',
+                ll_secret: ''
+            };
+            
+            // 根据类型设置 URL
+            const adUrl = document.getElementById('adUrl').value;
+            if (config.provider_type === 'work') {
+                config.work_url = adUrl;
+            } else if (config.provider_type === 'linkvertise') {
+                // 从 URL 提取 ID
+                const match = adUrl.match(/link-to\.net\/([^/]+)/);
+                config.lv_id = match ? match[1] : '';
+            } else if (config.provider_type === 'lootlabs') {
+                config.ll_link = adUrl;
+            }
+            
+            // 保存到 localStorage
+            localStorage.setItem('keySystemConfig', JSON.stringify(config, null, 2));
+            
+            // 显示配置代码
+            document.getElementById('configJson').textContent = JSON.stringify(config, null, 2);
+            document.getElementById('configCode').style.display = 'block';
+            
+            showMessage('✅ 配置已保存到本地存储', 'success');
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProviderConfig();
+        });
+    </script>
+</body>
+</html>
