@@ -3,193 +3,699 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>密钥系统管理</title>
-    <link rel="stylesheet" href="/next/js/BJEGgjhwhgUHQ2hvuwGH2.css">
+    <title>密钥系统管理 | BENG-SCRIPT</title>
+    
+    <!-- 极致灰白模糊 UI 样式 -->
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --btn-grey: rgba(200, 200, 200, 0.08);
+        }
+        body {
+            margin: 0; padding: 0; background: #000; color: #fff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            background: radial-gradient(circle at 50% 0%, #111 0%, #000 100%);
+            overflow: hidden;
+        }
+        :root {
+    --glass: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --btn-grey: rgba(200, 200, 200, 0.08);
+    --primary-color: #007bff;
+    --success-color: #00ff00;
+    --error-color: #ff4757;
+}
+.key-system-body {
+    margin: 0; padding: 0; background: #000; color: #fff;
+    font-family: 'Inter', -apple-system, sans-serif;
+    display: flex; justify-content: center; align-items: center; min-height: 100vh;
+    background: radial-gradient(circle at 50% 0%, #111 0%, #000 100%);
+    overflow: hidden;
+}
+.key-system-container {
+    background: var(--glass);
+    backdrop-filter: blur(35px) saturate(150%);
+    -webkit-backdrop-filter: blur(35px) saturate(150%);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px; padding: 40px; width: 380px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    margin: 20px auto;
+}
+.key-system-h2 { 
+    font-weight: 400; 
+    font-size: 22px; 
+    text-align: center; 
+    margin-bottom: 30px; 
+    letter-spacing: -0.5px; 
+}
+.key-input-group { 
+    margin-bottom: 20px; 
+}
+.key-label { 
+    font-size: 11px; 
+    color: #666; 
+    margin-bottom: 8px; 
+    margin-left: 5px; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    display: block; 
+}
+.key-input, .key-select {
+    width: 100%; 
+    padding: 14px 18px; 
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border); 
+    border-radius: 16px;
+    color: #fff; 
+    font-size: 14px; 
+    box-sizing: border-box; 
+    outline: none; 
+    transition: 0.3s;
+}
+.key-input:focus, .key-select:focus { 
+    border-color: rgba(255,255,255,0.3); 
+    background: rgba(255,255,255,0.06); 
+}
+.key-custom-select { 
+    position: relative; 
+    width: 100%; 
+    cursor: pointer; 
+}
+.key-select-trigger {
+    padding: 14px 18px; 
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border); 
+    border-radius: 16px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-size: 14px;
+}
+.key-options-list {
+    position: absolute; 
+    top: 110%; 
+    left: 0; 
+    width: 100%;
+    background: rgba(15, 15, 15, 0.95); 
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border); 
+    border-radius: 16px;
+    max-height: 0; 
+    opacity: 0; 
+    overflow: hidden; 
+    z-index: 100; 
+    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.key-custom-select.open .key-options-list { 
+    max-height: 250px; 
+    opacity: 1; 
+    padding: 5px 0; 
+}
+.key-option { 
+    padding: 12px 18px; 
+    font-size: 14px; 
+    color: #888; 
+    transition: 0.3s; 
+}
+.key-option:hover { 
+    background: rgba(255,255,255,0.1); 
+    color: #fff; 
+}
+.key-panel-wrap { 
+    display: none; 
+}
+.key-panel-wrap.active { 
+    display: block; 
+    animation: panelIn 0.5s; 
+}
+.key-btn {
+    width: 100%; 
+    padding: 16px; 
+    background: var(--btn-grey);
+    backdrop-filter: blur(15px); 
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px; 
+    color: #fff; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    margin-top: 25px; 
+    display: block; 
+    text-align: center; 
+    text-decoration: none; 
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.key-btn:hover { 
+    background: rgba(255,255,255,0.15); 
+    transform: translateY(-2px); 
+}
+.key-btn-success {
+    background: rgba(0, 255, 0, 0.1);
+    border-color: rgba(0, 255, 0, 0.2);
+}
+.key-btn-error {
+    background: rgba(255, 71, 87, 0.1);
+    border-color: rgba(255, 71, 87, 0.2);
+}
+#key-toast {
+    position: fixed; 
+    top: 25px; 
+    left: 50%; 
+    transform: translate(-50%, -100px);
+    padding: 12px 30px; 
+    border-radius: 50px; 
+    background: #fff; 
+    color: #000;
+    font-size: 14px; 
+    font-weight: 600; 
+    transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+    z-index: 1000;
+}
+#key-toast.show { 
+    transform: translate(-50%, 0); 
+}
+.key-stage-progress {
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 25px; 
+    position: relative;
+}
+.key-stage-progress:before {
+    content: ''; 
+    position: absolute; 
+    top: 50%; 
+    left: 10%; 
+    right: 10%; 
+    height: 2px; 
+    background: rgba(255,255,255,0.1); 
+    transform: translateY(-50%); 
+    z-index: 1;
+}
+.key-stage-dot {
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%; 
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1); 
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+    font-size: 12px; 
+    color: #666; 
+    position: relative; 
+    z-index: 2;
+}
+.key-stage-dot.active {
+    background: rgba(255,255,255,0.15); 
+    border-color: rgba(255,255,255,0.3); 
+    color: #fff;
+}
+.key-stage-dot.completed {
+    background: rgba(0,255,0,0.1); 
+    border-color: rgba(0,255,0,0.3); 
+    color: var(--success-color);
+}
+.key-stage-label {
+    position: absolute; 
+    bottom: -25px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    font-size: 10px; 
+    color: #666; 
+    white-space: nowrap;
+}
+.key-ad-warning {
+    padding: 15px; 
+    background: rgba(255,100,100,0.1); 
+    border-radius: 12px;
+    margin: 20px 0; 
+    border: 1px solid rgba(255,100,100,0.2);
+    font-size: 13px; 
+    color: #ff6b6b;
+}
+.key-success-box {
+    padding: 15px; 
+    background: rgba(0,255,0,0.1); 
+    border-radius: 12px;
+    margin: 20px 0; 
+    border: 1px solid rgba(0,255,0,0.2);
+    font-size: 13px; 
+    color: var(--success-color);
+}
+.key-key-display {
+    font-size: 24px; 
+    font-weight: bold; 
+    color: #fff; 
+    text-align: center; 
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    word-break: break-all;
+}
+.key-message {
+    text-align: center;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+}
+.key-back-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #666;
+}
+.key-back-link a {
+    color: #aaa;
+    text-decoration: none;
+    margin: 0 10px;
+}
+.key-back-link a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+@media (max-width: 480px) {
+    .key-system-container {
+        width: 90%;
+        padding: 25px;
+        margin: 10px auto;
+    }
+    .key-system-h2 {
+        font-size: 18px;
+    }
+    .key-stage-progress:before {
+        left: 5%;
+        right: 5%;
+    }
+}
+@keyframes panelIn { 
+    from { 
+        opacity: 0; 
+        transform: scale(0.98); 
+    } 
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    } 
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(35px) saturate(150%);
+            -webkit-backdrop-filter: blur(35px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px; padding: 40px; width: 380px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 { 
+            font-weight: 400; 
+            font-size: 22px; 
+            text-align: center; 
+            margin-bottom: 30px; 
+            letter-spacing: -0.5px; 
+        }
+        .input-group { 
+            margin-bottom: 20px; 
+        }
+        .label { 
+            font-size: 11px; 
+            color: #666; 
+            margin-bottom: 8px; 
+            margin-left: 5px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            display:block; 
+        }
+        input, select {
+            width: 100%; 
+            padding: 14px 18px; 
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            color: #fff; 
+            font-size: 14px; 
+            box-sizing: border-box; 
+            outline: none; 
+            transition: 0.3s;
+        }
+        input:focus, select:focus { 
+            border-color: rgba(255,255,255,0.3); 
+            background: rgba(255,255,255,0.06); 
+        }
+        
+        .custom-select { 
+            position: relative; 
+            width: 100%; 
+            cursor: pointer; 
+        }
+        .select-trigger {
+            padding: 14px 18px; 
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 14px;
+        }
+        .options-list {
+            position: absolute; 
+            top: 110%; 
+            left: 0; 
+            width: 100%;
+            background: rgba(15, 15, 15, 0.95); 
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            max-height: 0; 
+            opacity: 0; 
+            overflow: hidden; 
+            z-index: 100; 
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .custom-select.open .options-list { 
+            max-height: 250px; 
+            opacity: 1; 
+            padding: 5px 0; 
+        }
+        .option { 
+            padding: 12px 18px; 
+            font-size: 14px; 
+            color: #888; 
+            transition: 0.3s; 
+        }
+        .option:hover { 
+            background: rgba(255,255,255,0.1); 
+            color: #fff; 
+        }
+
+        .panel-wrap { 
+            display: none; 
+        }
+        .panel-wrap.active { 
+            display: block; 
+            animation: panelIn 0.5s; 
+        }
+        @keyframes panelIn { 
+            from { 
+                opacity: 0; 
+                transform: scale(0.98); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: scale(1); 
+            } 
+        }
+
+        button, .btn {
+            width: 100%; 
+            padding: 16px; 
+            background: var(--btn-grey);
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px; 
+            color: #fff; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            margin-top: 25px; 
+            display: block; 
+            text-align: center; 
+            text-decoration: none; 
+            box-sizing: border-box;
+        }
+        button:hover, .btn:hover { 
+            background: rgba(255,255,255,0.15); 
+            transform: translateY(-2px); 
+        }
+
+        #toast {
+            position: fixed; 
+            top: 25px; 
+            left: 50%; 
+            transform: translate(-50%, -100px);
+            padding: 12px 30px; 
+            border-radius: 50px; 
+            background: #fff; 
+            color: #000;
+            font-size: 14px; 
+            font-weight: 600; 
+            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+            z-index: 1000;
+        }
+        #toast.show { 
+            transform: translate(-50%, 0); 
+        }
+        
+        .ad-warning {
+            padding: 15px; 
+            background: rgba(255,100,100,0.1); 
+            border-radius: 12px;
+            margin: 20px 0; 
+            border: 1px solid rgba(255,100,100,0.2);
+            font-size: 13px; 
+            color: #ff6b6b;
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="key-system-body">
-        <div class="key-system-container">
-            <h2 class="key-system-h2">⚙️ 本地配置管理</h2>
-            
-            <div class="key-input-group">
-                <span class="key-label">管理员密码</span>
-                <input type="password" id="adminPassword" class="key-input" placeholder="默认密码: XXX285JBHW">
+    <div id="toast"></div>
+    <div class="container">
+        <h2>Admin Management</h2>
+        
+        <div class="input-group">
+            <span class="label">Admin Password</span>
+            <input type="password" id="pw" placeholder="••••••••">
+        </div>
+        
+        <button onclick="loadConfig()">加载配置</button>
+        
+        <div id="configForm" style="display: none; margin-top: 30px;">
+            <div class="input-group">
+                <span class="label">Static Key / Prefix</span>
+                <input type="text" id="sk" placeholder="设置固定密钥">
             </div>
             
-            <button class="key-btn" onclick="loadLocalConfig()">
-                <i class="fas fa-cog"></i> 加载本地配置
-            </button>
-            
-            <div id="configForm" style="display: none; margin-top: 30px;">
-                <div class="key-input-group">
-                    <span class="key-label">静态密钥 / 前缀</span>
-                    <input type="text" id="secretKey" class="key-input" value="KEY-">
-                </div>
-                
-                <div class="key-input-group">
-                    <span class="key-label">密钥模式</span>
-                    <select id="keyMode" class="key-select">
-                        <option value="static">固定密钥</option>
-                        <option value="random" selected>随机密钥 (24小时)</option>
-                    </select>
-                </div>
-                
-                <div class="key-input-group">
-                    <span class="key-label">广告提供商</label>
-                    <select id="providerType" class="key-select" onchange="updateProviderConfig()">
-                        <option value="work" selected>Work (自定义)</option>
-                        <option value="linkvertise">Linkvertise</option>
-                        <option value="lootlabs">LootLabs</option>
-                    </select>
-                </div>
-                
-                <div id="providerConfig">
-                    <div class="key-input-group">
-                        <span class="key-label">广告链接</span>
-                        <input type="text" id="adUrl" class="key-input" placeholder="https://example.com">
+            <div class="input-group">
+                <span class="label">Key Mode</span>
+                <select id="km" style="background:#111; color:#fff; border:1px solid var(--glass-border);">
+                    <option value="static">Static (Fixed Key)</option>
+                    <option value="random">Random (New Key / 24h)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <span class="label">Method</span>
+                <div class="custom-select" id="cSelect" onclick="this.classList.toggle('open')">
+                    <div class="select-trigger">
+                        <span id="sText">Work (Custom)</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="options-list">
+                        <div class="option" onclick="selectMode('work', 'Work (Custom)')">Work (Custom)</div>
+                        <div class="option" onclick="selectMode('linkvertise', 'Linkvertise')">Linkvertise</div>
+                        <div class="option" onclick="selectMode('lootlabs', 'LootLabs')">LootLabs</div>
                     </div>
                 </div>
-                
-                <button class="key-btn key-btn-success" onclick="saveLocalConfig()">
-                    <i class="fas fa-save"></i> 保存配置到本地
-                </button>
-                
-                <div id="saveResult" class="key-message"></div>
-                
-                <div class="key-success-box">
-                    <i class="fas fa-info-circle"></i> 
-                    <strong>配置使用说明：</strong><br>
-                    1. 保存配置后，复制下方配置代码<br>
-                    2. 粘贴到你的 Cloudflare Worker 中<br>
-                    3. 或直接在 Worker 中设置
+            </div>
+
+            <div id="p-work" class="panel-wrap active">
+                <div class="input-group">
+                    <span class="label">Redirect URL</span>
+                    <input type="text" id="work_url" placeholder="https://...">
                 </div>
-                
-                <div id="configCode" style="display: none; margin-top: 20px;">
-                    <pre id="configJson" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; overflow: auto; font-size: 12px;"></pre>
+            </div>
+            
+            <div id="p-linkvertise" class="panel-wrap">
+                <div class="input-group">
+                    <span class="label">LV User ID</span>
+                    <input type="text" id="lv_id">
                 </div>
+                <div class="input-group">
+                    <span class="label">LV Secret Key</span>
+                    <input type="password" id="lv_secret">
+                </div>
+            </div>
+            
+            <div id="p-lootlabs" class="panel-wrap">
+                <div class="input-group">
+                    <span class="label">LootLabs Link</span>
+                    <input type="text" id="ll_link" placeholder="https://lootlink.io/...">
+                </div>
+                <div class="input-group">
+                    <span class="label">LL Secret Key</span>
+                    <input type="password" id="ll_secret">
+                </div>
+            </div>
+
+            <button onclick="save()">Apply Configuration</button>
+            
+            <div class="ad-warning" style="margin-top: 20px;">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>重要提醒：</strong><br>
+                • LootLabs Destination URL 请填: <span id="callbackUrl"></span>/callback<br>
+                • 系统使用三阶段验证 (0-1-2-3)，第3阶段免广告直接获取密钥
             </div>
         </div>
     </div>
 
     <script>
-        // 管理员密码
-        const ADMIN_PASSWORD = "XXX285JBHW";
+        const API_BASE_URL = 'https://key-system.2176671594.workers.dev';
+        let mode = 'work'; // 默认提供商
         
-        // 显示消息
-        function showMessage(message, type = 'info') {
-            const resultDiv = document.getElementById('saveResult');
-            resultDiv.innerHTML = `<div style="color: ${type === 'success' ? '#0f0' : type === 'error' ? '#f00' : '#fff'}; text-align: center;">${message}</div>`;
+        // 显示提示消息
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'show';
             
-            // 自动隐藏
+            if (type === 'success') {
+                toast.style.background = '#4CAF50';
+            } else if (type === 'error') {
+                toast.style.background = '#f44336';
+            } else if (type === 'warning') {
+                toast.style.background = '#ff9800';
+            }
+            
             setTimeout(() => {
-                resultDiv.innerHTML = '';
+                toast.className = '';
             }, 3000);
         }
         
-        // 加载本地配置
-        function loadLocalConfig() {
-            const password = document.getElementById('adminPassword').value;
+        // 选择广告提供商
+        function selectMode(m, text) {
+            mode = m;
+            document.getElementById('sText').innerText = text;
             
-            if (password !== ADMIN_PASSWORD) {
-                showMessage('❌ 密码错误！', 'error');
+            // 隐藏所有面板
+            document.querySelectorAll('.panel-wrap').forEach(p => p.classList.remove('active'));
+            
+            // 显示选中的面板
+            document.getElementById('p-' + m).classList.add('active');
+        }
+        
+        // 加载配置
+        async function loadConfig() {
+            const password = document.getElementById('pw').value;
+            
+            if (!password) {
+                showToast('Please enter the administrator password.', 'warning');
                 return;
             }
             
-            // 从 localStorage 加载配置
-            const savedConfig = localStorage.getItem('keySystemConfig');
-            if (savedConfig) {
-                const config = JSON.parse(savedConfig);
-                fillForm(config);
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin`);
+                
+                if (response.ok) {
+                    const html = await response.text();
+                    
+                    // 由于/admin返回的是完整HTML，我们需要直接显示配置表单
+                    // 这里简化处理，直接显示配置表单
+                    document.getElementById('configForm').style.display = 'block';
+                    
+                    // 设置回调URL
+                    const currentDomain = window.location.origin;
+                    document.getElementById('callbackUrl').textContent = currentDomain;
+                    
+                    showToast('配置表单已加载', 'success');
+                } else {
+                    showToast('Configuration loading failed. Check network connection.', 'error');
+                }
+            } catch (error) {
+                showToast('Server Error: ' + error.message, 'error');
+                console.error('加载配置失败:', error);
             }
-            
-            document.getElementById('configForm').style.display = 'block';
-            showMessage('✅ 配置已加载', 'success');
         }
         
-        // 填充表单
-        function fillForm(config) {
-            document.getElementById('secretKey').value = config.secret_key || 'KEY-';
-            document.getElementById('keyMode').value = config.key_mode || 'random';
-            document.getElementById('providerType').value = config.provider_type || 'work';
-            document.getElementById('adUrl').value = getProviderUrl(config);
+        // 保存配置
+        async function save() {
+            const password = document.getElementById('pw').value;
+            const b = document.querySelector('button[onclick="save()"]'); 
             
-            updateProviderConfig();
-        }
-        
-        // 获取提供商 URL
-        function getProviderUrl(config) {
-            if (config.provider_type === 'work') {
-                return config.work_url || '';
-            } else if (config.provider_type === 'linkvertise') {
-                return `https://link-to.net/${config.lv_id || ''}/dynamic`;
-            } else if (config.provider_type === 'lootlabs') {
-                return config.ll_link || '';
-            }
-            return '';
-        }
-        
-        // 更新提供商配置显示
-        function updateProviderConfig() {
-            const type = document.getElementById('providerType').value;
-            let label = '';
-            
-            if (type === 'work') {
-                label = 'Work 重定向链接';
-            } else if (type === 'linkvertise') {
-                label = 'Linkvertise 链接（包含ID）';
-            } else if (type === 'lootlabs') {
-                label = 'LootLabs 链接';
-            }
-            
-            document.querySelector('#providerConfig .key-label').textContent = label;
-        }
-        
-        // 保存本地配置
-        function saveLocalConfig() {
-            const password = document.getElementById('adminPassword').value;
-            
-            if (password !== ADMIN_PASSWORD) {
-                showMessage('❌ 密码错误！', 'error');
+            if (!password) {
+                showToast('Please enter the administrator password.', 'warning');
                 return;
             }
             
-            const config = {
-                secret_key: document.getElementById('secretKey').value,
-                key_mode: document.getElementById('keyMode').value,
-                provider_type: document.getElementById('providerType').value,
-                work_url: '',
-                lv_id: '',
-                lv_secret: '',
-                ll_link: '',
-                ll_secret: ''
+            b.innerText = 'Syncing...';
+            
+            const payload = {
+                password: password,
+                secret_key: document.getElementById('sk').value,
+                key_mode: document.getElementById('km').value,
+                provider_type: mode,
+                work_url: document.getElementById('work_url').value,
+                lv_id: document.getElementById('lv_id').value,
+                lv_secret: document.getElementById('lv_secret').value,
+                ll_link: document.getElementById('ll_link').value,
+                ll_secret: document.getElementById('ll_secret').value
             };
             
-            // 根据类型设置 URL
-            const adUrl = document.getElementById('adUrl').value;
-            if (config.provider_type === 'work') {
-                config.work_url = adUrl;
-            } else if (config.provider_type === 'linkvertise') {
-                // 从 URL 提取 ID
-                const match = adUrl.match(/link-to\.net\/([^/]+)/);
-                config.lv_id = match ? match[1] : '';
-            } else if (config.provider_type === 'lootlabs') {
-                config.ll_link = adUrl;
+            try {
+                const res = await fetch(`${API_BASE_URL}/save-config`, { 
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload) 
+                });
+                
+                const r = await res.json();
+                const t = document.getElementById('toast');
+                
+                if (r.success) {
+                    t.innerText = 'Success: Configuration saved';
+                    t.style.background = '#4CAF50';
+                } else {
+                    t.innerText = 'Error: ' + (r.msg || 'Unknown error');
+                    t.style.background = '#f44336';
+                }
+                
+                t.classList.add('show'); 
+                setTimeout(() => t.classList.remove('show'), 3000);
+                
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+                console.error('保存配置失败:', error);
             }
             
-            // 保存到 localStorage
-            localStorage.setItem('keySystemConfig', JSON.stringify(config, null, 2));
-            
-            // 显示配置代码
-            document.getElementById('configJson').textContent = JSON.stringify(config, null, 2);
-            document.getElementById('configCode').style.display = 'block';
-            
-            showMessage('✅ 配置已保存到本地存储', 'success');
+            b.innerText = 'Apply Configuration';
         }
         
-        // 初始化
+        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
-            updateProviderConfig();
+            // 设置回调URL
+            const currentDomain = window.location.origin;
+            const callbackUrlElement = document.getElementById('callbackUrl');
+            if (callbackUrlElement) {
+                callbackUrlElement.textContent = currentDomain;
+            }
+            
+            // 点击其他地方关闭选择框
+            document.addEventListener('click', function(event) {
+                const select = document.getElementById('cSelect');
+                if (!select.contains(event.target)) {
+                    select.classList.remove('open');
+                }
+            });
+            
+            // 初始加载时显示配置表单（可选）
+            // loadConfig();
         });
     </script>
 </body>
