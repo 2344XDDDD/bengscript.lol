@@ -1,1 +1,891 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>BENG - SCRIPT KEY ADMIN</title> <meta property="og:title" content="BENG SCRIPT API" /> <meta property="og:description" content="BENG SCRIPT" /> <meta property="og:url" content="https://bengscript.lol" /> <meta property="og:type" content="website" /> <meta name="twitter:card" content="summary_large_image"> <meta name="twitter:title" content="BENG SCRIPT API"> <meta name="twitter:description" content="BENG SCRIPT"> <meta name="theme-color" content="#151560"> <link rel="stylesheet" href="/next/js/BJEGgjhwhgUHQ2hvuwGH2.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> </head> <body> <div class="loading-screen"> <div class="loading-logo">BENG-SCRIPT</div> </div> <div class="particles" id="particles"></div> <div id="toast"></div> <div class="container"> <h2>Admin Management</h2> <div class="input-group"> <span class="label">Admin Password</span> <input type="password" id="pw" placeholder="••••••••"> </div> <button onclick="loadConfig()">Load configuration</button> <div id="configForm" style="display: none; margin-top: 30px;"> <div class="input-group"> <span class="label">Static Key / Prefix</span> <input type="text" id="sk" placeholder="Set a fixed key"> </div> <div class="input-group"> <span class="label">Key Mode</span> <select id="km" style="background:#111; color:#fff; border:1px solid var(--glass-border);"> <option value="static">Static (Fixed Key)</option> <option value="random">Random (New Key / 24h)</option> </select> </div> <div class="input-group"> <span class="label">Method</span> <div class="custom-select" id="cSelect" onclick="this.classList.toggle('open')"> <div class="select-trigger"> <span id="sText">Work (Custom)</span> <i class="fas fa-chevron-down"></i> </div> <div class="options-list"> <div class="option" onclick="selectMode('work', 'Work (Custom)')">Work</div> <div class="option" onclick="selectMode('linkvertise', 'Linkvertise')">Linkvertise</div> <div class="option" onclick="selectMode('lootlabs', 'LootLabs')">LootLabs</div> </div> </div> </div> <div id="p-work" class="panel-wrap active"> <div class="input-group"> <span class="label">Redirect URL</span> <input type="text" id="work_url" placeholder="https://..."> </div> </div> <div id="p-linkvertise" class="panel-wrap"> <div class="input-group"> <span class="label">Linkvertise User ID</span> <input type="text" id="lv_id"> </div> <div class="input-group"> <span class="label">Linkvertise Secret Key</span> <input type="password" id="lv_secret"> </div> </div> <div id="p-lootlabs" class="panel-wrap"> <div class="input-group"> <span class="label">LootLabs Link</span> <input type="text" id="ll_link" placeholder="https://lootlink.org/..."> </div> <div class="input-group"> <span class="label">LootLabs Secret Key</span> <input type="password" id="ll_secret"> </div> </div> <button onclick="save()">Apply Configuration</button> <div class="ad-warning" style="margin-top: 20px;"> <i class="fas fa-exclamation-triangle"></i> <strong>Important Note: </strong><br> • Url:<span id="callbackUrl"></span>/callback<br> </div> </div> </div> <script src="/next/js/GJH74NVWI2ghwk2.js"></script> </body> </html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BENG - SCRIPT KEY ADMIN</title>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --btn-grey: rgba(200, 200, 200, 0.08);
+        }
+        @keyframes slideUpFade {
+            0% {
+                opacity: 0;
+                transform: translateY(80px) scale(0.95);
+            }
+            50% {
+                opacity: 0.5;
+                transform: translateY(20px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes backgroundPulse {
+            0%, 100% {
+                background: radial-gradient(circle at 50% 0%, #111 0%, #000 100%);
+            }
+            50% {
+                background: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #0a0a0a 100%);
+            }
+        }
+        body {
+            margin: 0; 
+            padding: 0; 
+            background: #000; 
+            color: #fff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            background: radial-gradient(circle at 50% 0%, #111 0%, #000 100%);
+            overflow: hidden;
+            animation: backgroundPulse 8s ease-in-out infinite;
+        }
+        body {
+            background-color: #050505;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000' viewBox='0 0 1000 1000'%3E%3Cpath d='M0 100c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0M0 200c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0M0 300c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0M0 400c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0M0 500c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0M0 600c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0M0 700c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0M0 800c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0M0 900c50-20 100-20 150 0s100 20 150 0 100-20 150 0 100 20 150 0 100-20 150 0 100 20 150 0' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.005' numOctaves='5'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='80'/%3E%3C/filter%3E%3Cpath filter='url(%23a)' d='M-100-100h1200v1200H-100z' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-size: 1000px 1000px;
+            animation: rippleMove 60s linear infinite;
+        }
+        @keyframes rippleMove {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: 1000px 1000px;
+            }
+        }
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 0.8s ease-out 0.5s forwards;
+        }
+        
+        .loading-logo {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            position: relative;
+            animation: logoFloat 2s ease-in-out infinite;
+        }
+        
+        .loading-logo:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            animation: loadingBar 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes loadingBar {
+            0% { width: 20px; opacity: 0.3; }
+            50% { width: 60px; opacity: 1; }
+            100% { width: 20px; opacity: 0.3; }
+        }
+        
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(35px) saturate(150%);
+            -webkit-backdrop-filter: blur(35px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px; 
+            padding: 40px; 
+            width: 380px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            opacity: 0;
+            transform: translateY(80px) scale(0.95);
+            animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+            position: relative;
+        }
+        
+        .container:before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0.1), 
+                rgba(255,255,255,0.05), 
+                rgba(255,255,255,0.1));
+            border-radius: 32px;
+            z-index: -1;
+            opacity: 0;
+            animation: borderGlow 3s ease-in-out 1.5s forwards;
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.3; }
+        }
+        
+        h2 { 
+            font-weight: 400; 
+            font-size: 22px; 
+            text-align: center; 
+            margin-bottom: 30px; 
+            letter-spacing: -0.5px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: floatUp 0.8s ease-out 1s forwards;
+        }
+        
+        .input-group { 
+            margin-bottom: 20px; 
+            opacity: 0;
+            transform: translateY(15px);
+            animation: floatUp 0.6s ease-out forwards;
+        }
+
+        .input-group:nth-child(1) { animation-delay: 1.2s; }
+        .input-group:nth-child(2) { animation-delay: 1.3s; }
+        .input-group:nth-child(3) { animation-delay: 1.4s; }
+        .input-group:nth-child(4) { animation-delay: 1.5s; }
+        
+        .label { 
+            font-size: 11px; 
+            color: #666; 
+            margin-bottom: 8px; 
+            margin-left: 5px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            display: block; 
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: slideInLeft 0.5s ease-out 1.2s forwards;
+        }
+        
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        input, select {
+            width: 100%; 
+            padding: 14px 18px; 
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            color: #fff; 
+            font-size: 14px; 
+            box-sizing: border-box; 
+            outline: none; 
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: center;
+        }
+        
+        input:focus, select:focus { 
+            border-color: rgba(255,255,255,0.3); 
+            background: rgba(255,255,255,0.06); 
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .custom-select { 
+            position: relative; 
+            width: 100%; 
+            cursor: pointer; 
+        }
+        
+        .select-trigger {
+            padding: 14px 18px; 
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .custom-select.open .select-trigger {
+            border-color: rgba(255,255,255,0.3);
+            transform: scale(1.02);
+        }
+        
+        /* 修复图标旋转动画 */
+        .select-trigger i {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: center;
+        }
+        
+        .custom-select.open .select-trigger i {
+            transform: rotate(180deg);
+        }
+        
+        .options-list {
+            position: absolute; 
+            top: 110%; 
+            left: 0; 
+            width: 100%;
+            background: rgba(15, 15, 15, 0.95); 
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            max-height: 0; 
+            opacity: 0; 
+            overflow: hidden; 
+            z-index: 100; 
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(-10px);
+            visibility: hidden;
+        }
+        
+        .custom-select.open .options-list { 
+            max-height: 250px; 
+            opacity: 1; 
+            padding: 5px 0; 
+            transform: translateY(0);
+            visibility: visible;
+        }
+        
+        .option { 
+            padding: 12px 18px; 
+            font-size: 14px; 
+            color: #888; 
+            transition: 0.3s; 
+            cursor: pointer;
+        }
+        
+        .option:hover { 
+            background: rgba(255,255,255,0.1); 
+            color: #fff; 
+            transform: translateX(5px);
+        }
+
+        .panel-wrap { 
+            display: none; 
+        }
+        
+        .panel-wrap.active { 
+            display: block; 
+            animation: panelIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        
+        @keyframes panelIn { 
+            from { 
+                opacity: 0; 
+                transform: translateY(10px) scale(0.98); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            } 
+        }
+
+        button, .btn {
+            width: 100%; 
+            padding: 16px; 
+            background: var(--btn-grey);
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px; 
+            color: #fff; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+            margin-top: 25px; 
+            display: block; 
+            text-align: center; 
+            text-decoration: none; 
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: floatUp 0.6s ease-out 1.6s forwards;
+        }
+        
+        button:hover, .btn:hover { 
+            background: rgba(255,255,255,0.15); 
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        #toast {
+            position: fixed; 
+            top: 25px; 
+            left: 50%; 
+            transform: translate(-50%, -100px) scale(0.95);
+            padding: 14px 32px; 
+            border-radius: 50px; 
+            background: rgba(255, 255, 255, 0.08); 
+            color: rgba(255, 255, 255, 0.9); 
+            font-size: 14px; 
+            font-weight: 400; 
+            letter-spacing: 0.3px;
+            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+            z-index: 1000;
+            opacity: 0;
+            backdrop-filter: blur(25px) saturate(200%); 
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+            white-space: nowrap;
+            max-width: 90vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+        }
+        
+        #toast.show { 
+            transform: translate(-50%, 0) scale(1);
+            opacity: 1;
+        }
+
+        #toast.success {
+            background: rgba(30, 31, 30, 0.08);
+            border-color: rgba(30, 31, 30, 0.08);
+        }
+        
+        #toast.error {
+            background: rgba(30, 31, 30, 0.08);
+            border-color: rgba(30, 31, 30, 0.08);
+        }
+        
+        #toast.warning {
+            background: rgba(30, 31, 30, 0.08);
+            border-color: rgba(30, 31, 30, 0.08);
+        }
+        
+        .ad-warning {
+            padding: 15px; 
+            background: rgba(255,100,100,0.1); 
+            border-radius: 12px;
+            margin: 20px 0; 
+            border: 1px solid rgba(255,100,100,0.2);
+            font-size: 13px; 
+            color: #ff6b6b;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: floatUp 0.6s ease-out 1.8s forwards;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: floatParticle 15s infinite linear;
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 30px 20px;
+                border-radius: 25px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            #toast {
+                padding: 12px 20px; 
+                font-size: 13px;
+                max-width: 95vw;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loading-logo">BENG-SCRIPT</div>
+    </div>
+    <div class="particles" id="particles"></div>
+    <div id="toast"></div>
+    <div class="container">
+        <h2>Admin Management</h2>
+        
+        <div class="input-group">
+            <span class="label">Admin Password</span>
+            <input type="password" id="pw" placeholder="••••••••">
+        </div>
+        
+        <button onclick="loadConfig()">Load configuration</button>
+        
+        <div id="configForm" style="display: none; margin-top: 30px;">
+            <div class="input-group">
+                <span class="label">Static Key / Prefix</span>
+                <input type="text" id="sk" placeholder="Set a fixed key">
+            </div>
+            
+            <div class="input-group">
+                <span class="label">Key Mode</span>
+                <div class="custom-select" id="keyModeSelect" onclick="toggleSelect(this)">
+                    <div class="select-trigger">
+                        <span id="keyModeText">Static (Fixed Key)</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="options-list">
+                        <div class="option" onclick="selectKeyMode(event, 'static', 'Static (Fixed Key)')">Static (Fixed Key)</div>
+                        <div class="option" onclick="selectKeyMode(event, 'random', 'Random (New Key / 24h)')">Random (New Key / 24h)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <span class="label">Method</span>
+                <div class="custom-select" id="methodSelect" onclick="toggleSelect(this)">
+                    <div class="select-trigger">
+                        <span id="methodText">Work (Custom)</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="options-list">
+                        <div class="option" onclick="selectMethod(event, 'work', 'Work (Custom)')">Work (Custom)</div>
+                        <div class="option" onclick="selectMethod(event, 'linkvertise', 'Linkvertise')">Linkvertise</div>
+                        <div class="option" onclick="selectMethod(event, 'lootlabs', 'LootLabs')">LootLabs</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="p-work" class="panel-wrap active">
+                <div class="input-group">
+                    <span class="label">Redirect URL</span>
+                    <input type="text" id="work_url" placeholder="https://...">
+                </div>
+            </div>
+            
+            <div id="p-linkvertise" class="panel-wrap">
+                <div class="input-group">
+                    <span class="label">Linkvertise User ID</span>
+                    <input type="text" id="lv_id">
+                </div>
+                <div class="input-group">
+                    <span class="label">Linkvertise Secret Key</span>
+                    <input type="password" id="lv_secret">
+                </div>
+            </div>
+            
+            <div id="p-lootlabs" class="panel-wrap">
+                <div class="input-group">
+                    <span class="label">LootLabs Link</span>
+                    <input type="text" id="ll_link" placeholder="https://lootlink.org/...">
+                </div>
+                <div class="input-group">
+                    <span class="label">LootLabs Secret Key</span>
+                    <input type="password" id="ll_secret">
+                </div>
+            </div>
+
+            <button onclick="save()">Apply Configuration</button>
+            
+            <div class="ad-warning" style="margin-top: 20px;">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>Important Note: </strong><br>
+                • Url: <span id="callbackUrl"></span>/callback<br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://key-system.2176671594.workers.dev';
+        let mode = 'work';
+        let keyMode = 'static';
+        let currentPassword = '';
+        let isAuthorized = false;
+        
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 4 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.className = '';
+            toast.textContent = message;
+            toast.classList.add('show');
+            if (type === 'success') {
+                toast.classList.add('success');
+            } else if (type === 'error') {
+                toast.classList.add('error');
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+            }
+
+            setTimeout(() => {
+                toast.style.visibility = 'visible';
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.className = '';
+                    toast.style.visibility = 'hidden';
+                }, 500);
+            }, 3000);
+        }
+        
+        function toggleSelect(element) {
+            // 关闭其他打开的下拉
+            const allSelects = document.querySelectorAll('.custom-select');
+            allSelects.forEach(select => {
+                if (select !== element && select.classList.contains('open')) {
+                    select.classList.remove('open');
+                }
+            });
+            
+            // 切换当前下拉
+            element.classList.toggle('open');
+        }
+        
+        // 修复：添加event参数并阻止事件冒泡
+        function selectKeyMode(event, value, text) {
+            event.stopPropagation(); // 阻止事件冒泡
+            keyMode = value;
+            document.getElementById('keyModeText').innerText = text;
+            closeAllSelects();
+        }
+        
+        // 修复：添加event参数并阻止事件冒泡
+        function selectMethod(event, value, text) {
+            event.stopPropagation(); // 阻止事件冒泡
+            mode = value;
+            document.getElementById('methodText').innerText = text;
+            document.querySelectorAll('.panel-wrap').forEach(p => p.classList.remove('active'));
+            const selectedPanel = document.getElementById('p-' + value);
+            if (selectedPanel) {
+                selectedPanel.classList.add('active');
+            }
+            closeAllSelects();
+        }
+        
+        function closeAllSelects() {
+            document.querySelectorAll('.custom-select').forEach(select => {
+                select.classList.remove('open');
+            });
+        }
+        
+        async function makeCORSRequest(url, options = {}) {
+            const defaultOptions = {
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            };
+            const mergedOptions = { ...defaultOptions, ...options };
+            try {
+                const response = await fetch(url, mergedOptions);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
+                    showToast('CORS error, try using a proxy....', 'warning');
+                    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                    try {
+                        const proxyResponse = await fetch(proxyUrl);
+                        const proxyData = await proxyResponse.json();
+                        
+                        if (proxyData.contents) {
+                            return {
+                                ok: true,
+                                json: async () => JSON.parse(proxyData.contents),
+                                text: async () => proxyData.contents
+                            };
+                        }
+                    } catch (proxyError) {
+                        throw new Error(`Proxy request failed: ${proxyError.message}`);
+                    }
+                }
+                throw error;
+            }
+        }
+        
+        async function loadConfig() {
+            const password = document.getElementById('pw').value;
+            currentPassword = password;
+            
+            if (!password) {
+                showToast('Please enter the administrator password.', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await makeCORSRequest(`${API_BASE_URL}/admin`, {
+                    method: 'POST',
+                    body: JSON.stringify({ password: password })
+                });
+                
+                if (response.ok) {
+                    isAuthorized = true;
+                    const configForm = document.getElementById('configForm');
+                    configForm.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        const formGroups = configForm.querySelectorAll('.input-group');
+                        formGroups.forEach((group, index) => {
+                            group.style.opacity = '0';
+                            group.style.transform = 'translateY(15px)';
+                            group.style.animation = `floatUp 0.6s ease-out ${0.1 * index}s forwards`;
+                        });
+                    }, 100);
+                    
+                    const currentDomain = window.location.origin;
+                    document.getElementById('callbackUrl').textContent = currentDomain;
+                    
+                    try {
+                        const configData = await response.json();
+                        if (configData && configData.config) {
+                            const config = configData.config;
+                            document.getElementById('sk').value = config.secret_key || '';
+                            
+                            // 设置Key Mode
+                            if (config.key_mode) {
+                                keyMode = config.key_mode;
+                                const keyModeText = config.key_mode === 'static' ? 
+                                    'Static (Fixed Key)' : 'Random (New Key / 24h)';
+                                document.getElementById('keyModeText').innerText = keyModeText;
+                            }
+                            
+                            // 设置Method
+                            if (config.provider_type) {
+                                mode = config.provider_type;
+                                const methodText = getModeText(config.provider_type);
+                                document.getElementById('methodText').innerText = methodText;
+                                
+                                document.querySelectorAll('.panel-wrap').forEach(p => p.classList.remove('active'));
+                                const selectedPanel = document.getElementById('p-' + config.provider_type);
+                                if (selectedPanel) {
+                                    selectedPanel.classList.add('active');
+                                }
+                            }
+                            
+                            document.getElementById('work_url').value = config.work_url || '';
+                            document.getElementById('lv_id').value = config.lv_id || '';
+                            document.getElementById('lv_secret').value = config.lv_secret || '';
+                            document.getElementById('ll_link').value = config.ll_link || '';
+                            document.getElementById('ll_secret').value = config.ll_secret || '';
+                        }
+                    } catch (parseError) {
+                        console.log('No existing config or parse error:', parseError);
+                    }
+                    
+                    showToast('Configuration form has been loaded', 'success');
+                } else {
+                    const errorText = await response.text();
+                    showToast(`Configuration loading failed: ${errorText}`, 'error');
+                    isAuthorized = false;
+                }
+            } catch (error) {
+                showToast(`Server error: ${error.message}`, 'error');
+                console.error('Configuration loading failed:', error);
+                isAuthorized = false;
+                
+                // 不再显示开发模式，防止未授权访问
+                showToast('Authentication failed. Please check your password and try again.', 'error');
+            }
+        }
+        
+        function getModeText(mode) {
+            const modeTexts = {
+                'work': 'Work (Custom)',
+                'linkvertise': 'Linkvertise',
+                'lootlabs': 'LootLabs'
+            };
+            return modeTexts[mode] || 'Work (Custom)';
+        }
+        
+        async function save() {
+            // 检查授权状态
+            if (!isAuthorized) {
+                showToast('Unauthorized. Please load configuration with valid password first.', 'error');
+                return;
+            }
+            
+            const password = currentPassword;
+            const b = document.querySelector('button[onclick="save()"]'); 
+            
+            if (!password) {
+                showToast('Please enter the administrator password.', 'warning');
+                return;
+            }
+            
+            b.innerText = 'Synchronizing...';
+            b.style.transform = 'scale(0.95)';
+            b.disabled = true;
+            
+            const payload = {
+                password: password,
+                secret_key: document.getElementById('sk').value,
+                key_mode: keyMode,
+                provider_type: mode,
+                work_url: document.getElementById('work_url').value,
+                lv_id: document.getElementById('lv_id').value,
+                lv_secret: document.getElementById('lv_secret').value,
+                ll_link: document.getElementById('ll_link').value,
+                ll_secret: document.getElementById('ll_secret').value
+            };
+            
+            try {
+                const res = await makeCORSRequest(`${API_BASE_URL}/save-config`, { 
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await res.json();
+                if (result.success) {
+                    showToast('Success: Configuration saved', 'success');
+                    b.style.background = 'rgba(0, 255, 0, 0.1)';
+                    b.style.borderColor = 'rgba(0, 255, 0, 0.2)';
+                    localStorage.setItem('beng_script_config', JSON.stringify({
+                        ...payload,
+                        saved_at: new Date().toISOString()
+                    }));
+                } else {
+                    showToast('Error: ' + (result.msg || '?Error'), 'error');
+                    b.style.background = 'rgba(255, 71, 87, 0.1)';
+                    b.style.borderColor = 'rgba(255, 71, 87, 0.2)';
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+                console.error('Failed to save configuration:', error);
+                
+                // 只有在已授权的情况下才允许本地保存
+                if (isAuthorized) {
+                    localStorage.setItem('beng_script_config', JSON.stringify({
+                        ...payload,
+                        saved_at: new Date().toISOString(),
+                        local_backup: true
+                    }));
+                    showToast('Network error, configuration has been saved to local storage', 'warning');
+                }
+            }
+            
+            b.innerText = 'Application Configuration';
+            b.style.transform = '';
+            b.disabled = false;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            const currentDomain = window.location.origin;
+            const callbackUrlElement = document.getElementById('callbackUrl');
+            if (callbackUrlElement) {
+                callbackUrlElement.textContent = currentDomain;
+            }
+            
+            // 点击其他地方关闭下拉
+            document.addEventListener('click', function(event) {
+                const selects = document.querySelectorAll('.custom-select');
+                selects.forEach(select => {
+                    if (!select.contains(event.target)) {
+                        select.classList.remove('open');
+                    }
+                });
+            });
+            
+            document.querySelectorAll('input, select').forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-5px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 加载本地保存的配置
+            const savedConfig = localStorage.getItem('beng_script_config');
+            if (savedConfig) {
+                try {
+                    const config = JSON.parse(savedConfig);
+                    if (config.local_backup) {
+                        showToast('Locally saved configuration detected', 'info');
+                    }
+                } catch (e) {
+                    // 忽略解析错误
+                }
+            }
+        });
+    </script>
+</body>
+</html>
