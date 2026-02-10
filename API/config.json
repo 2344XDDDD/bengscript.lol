@@ -1,12 +1,12 @@
 {
   "active_provider": "lv",
-  "beng_key": "BENG_KEY_MA66G76JKSX3NJZ0UGMWY",
-  "last_updated": "2026/2/10 13:10:53",
+  "beng_key": "BENG_KEY_6WJ97GDSDN3JQVKB8C9QG",
+  "last_updated": "2026/2/10 13:12:37",
   "settings": {
     "lv": {
-      "id": "1",
-      "secret": "1",
-      "final_url": "https://linkvertise.com/1/1"
+      "id": "2",
+      "secret": "2",
+      "final_url": "https://linkvertise.com/2/1"
     },
     "ll": {
       "link": "",
