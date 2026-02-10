@@ -1,0 +1,21 @@
+{
+  "active_provider": "lv",
+  "beng_key": "BENG_KEY_INITIAL_START",
+  "last_updated": "2023-10-27T12:00:00Z",
+  "settings": {
+    "lv": {
+      "id": "",
+      "secret": "",
+      "final_url": ""
+    },
+    "ll": {
+      "link": "",
+      "secret": "",
+      "final_url": ""
+    },
+    "wi": {
+      "url": "",
+      "final_url": ""
+    }
+  }
+}
